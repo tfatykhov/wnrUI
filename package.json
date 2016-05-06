@@ -8,7 +8,7 @@
   "homepage": "https://github.com/tfatykhov/WinkRedNode",
   "repository": {
     "type": "git",
-    "url": "https:////github.com/tfatykhov/wnrU.git"
+    "url": "https://github.com/tfatykhov/wnrU.git"
   },
    "dependencies": {
 		"angular": "^1.2.x || >= 1.4.0-beta.0 || >= 1.5.0-beta.0",
@@ -21,3 +21,4 @@
 		"ngMap" : ">0.0.x",		
 		"material-design-lite"  : ">0.0.x"
     }
+}
