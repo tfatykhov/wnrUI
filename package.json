@@ -18,7 +18,7 @@
 		"angular-resource" : ">0.0.x",
 		"angular-ui-router" : ">0.0.x",		
 		"angular-messages" : ">0.0.x",	
-		"ng-map" : ">0.0.x",		
+		"ngmap" : ">0.0.x",		
 		"material-design-lite"  : ">0.0.x"
     }
 }
