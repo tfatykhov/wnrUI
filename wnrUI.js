@@ -43,6 +43,6 @@ module.exports = function(RED) {
 		});
     }
 
-	RED.httpNode.use("/wnrUI",express.static(__dirname + '/wnrUI'));
+    RED.httpNode.use("/wnrUI",express.static(__dirname));
     RED.nodes.registerType("wnrUI",Freeboard);
 }
