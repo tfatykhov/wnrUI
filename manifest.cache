@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v4.12 2016-05-14
+# v4.14 2016-05-14
 
 
 NETWORK:
@@ -16,10 +16,10 @@ node_modules/angular-aria/angular-aria.min.js
 node_modules/angular-material/angular-material.min.js    
 node_modules/angular-messages/angular-messages.min.js
 node_modules/material-design-lite/material.min.js  
-node_modules/ngstorage/ngStorage.min.js       
-node_modules/ngmap/ng-map.min.js	
-node_modules/markerclusterer/src/markerwithlabel.js
-node_modules/markerclusterer/src/markerclusterer_compiled.js
+addons/ngstorage/ngStorage.min.js       
+node_modules/ngmap/build/scripts/ng-map.min.js	
+addons/markerclusterer/src/markerwithlabel.js
+addons/markerclusterer/src/markerclusterer_compiled.js
 images/default_pic.jpg
 images/house.jpg
 images/innovation.png
