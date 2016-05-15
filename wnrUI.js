@@ -17,32 +17,14 @@ var express=require("express");
 var fs=require("fs");
 module.exports = function(RED) {
     "use strict";
-	var userDir="";
-	if (RED.settings.userDir){
-		userDir=RED.settings.userDir+"/";
-	} 
-
-	var dstemplate;
-	var dslib;
-	var pendingresponses=new Array();
-
 	var nodes=new Array();
-    function Freeboard(n) {
+    function WnrUI(n) {
         RED.nodes.createNode(this,n);
         this.name = n.name.trim();
 		nodes.push(this);
         var that = this;
-        this.on("input", function(msg) {
-			that.lastValue=msg.payload;
-        });
-		this.on("close",function() {
-			var index = nodes.indexOf(that);
-			if (index > -1) {
-				nodes.splice(index, 1);
-			}
-		});
     }
 
     RED.httpNode.use("/wnrUI",express.static(__dirname));
-    RED.nodes.registerType("wnrUI",wnrUI);
+    RED.nodes.registerType("wnrUI",WnrUI);
 }
