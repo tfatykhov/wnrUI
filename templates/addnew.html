@@ -1,0 +1,28 @@
+<form id="PropForm" novalidate flex ng-submit="vm.onSubmit()" name="vm.propertyForm">    
+	    <md-content  layout="column">
+	             <md-tabs flex md-dynamic-width="" md-dynamic-height="" md-border-bottom="">
+	                <md-tab ng-repeat="tab in vm.form.formData">
+	                    <md-tab-label style="position: fixed; overflow:hidden;">
+	                    {{tab.title}}
+	                    </md-tab-label>
+	                    <md-tab-body>
+	                    <md-content flex layout-padding layout-wrap layout-fill>                     
+						<div class="turbop-layout mdl-layout" layout-fill layout="column" flex="80">
+	                        <formly-form model="vm.property" fields="tab.form.propertyFields" form="vm.propertyForm">
+	                        </formly-form>                    
+	                    </div>
+	                    </md-content>          
+	                    </md-tab-body>
+	                </md-tab>                 
+	            </md-tabs>
+	        </md-content>               
+	<md-content layout-fill layout="column">
+	<footer flex  style="position: fixed; right:0; bottom: 0;">
+	<md-toolbar class="md-padding" layout="row" layout-align="end center" style="border-style: groove;">
+	    <span>Progress:&nbsp;&nbsp; </span>
+	    <md-progress-circular  class="md-accent md-hue-1" md-mode="determinate" value="{{vm.progress}}"></md-progress-circular>&nbsp;&nbsp; 
+	    <md-button class="md-raised md-cornered" type="submit" form="PropForm"  class="btn btn-primary" ng-disabled="vm.propertyForm.$invalid">Complete form</md-button>    
+	</md-toolbar>
+	</footer>  
+	</md-content>
+</form>	

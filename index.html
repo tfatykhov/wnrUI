@@ -1,12 +1,149 @@
-<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
-<HTML>
-   <HEAD>
-      <TITLE>
-         A Small Hello 
-      </TITLE>
-   </HEAD>
-<BODY>
-   <H1>Hi</H1>
-   <P>This is very minimal "hello world" HTML document.</P> 
-</BODY>
-</HTML>
+<!DOCTYPE html>
+<html manifest="manifest.cache">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+        <meta name="description" content="HomeReady 2.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+        <title>HomeReady 2.0</title>    
+        <!-- Add to homescreen for Chrome on Android -->
+        <meta name="mobile-web-app-capable" content="yes">
+          <!-- Add to homescreen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="HomeReady 2.0">
+        <!-- Icons -->
+        <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="icons/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="icons/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="icons/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="icons/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="icons/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="icons/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="icons/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="icons/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+        <link rel="shortcut icon" href="icons/favicon-32x32.png">    
+        <!-- Styles -->       
+        <link rel="stylesheet" type="text/css" href="node_modules/angular-material/angular-material.css">
+        <link rel="stylesheet" href="css/roboto.css" type="text/css"> 
+        <link rel="stylesheet" href="node_modules/material-design-lite/dist/material.blue-deep_orange.min.css">
+        <link rel="stylesheet" href="css/style.css">  
+    </head>
+    <body ng-app="HomeReadyApp" ng-controller="MainController as vm">
+		<div id="Screen1" layout-fill  layout="row" style="overflow:hidden;" ng-cloak>    
+			<md-fab-speed-dial class="md-fling md-fab-bottom-left" md-open="false"  md-direction="{{vm.m_direction}}">
+			 <md-fab-trigger>
+			   <md-button aria-label="menu" class="md-fab md-primary">		   
+			     <md-icon class="material-icons">apps</md-icon>
+			   </md-button>
+			 </md-fab-trigger>
+			   <md-fab-actions>
+			   <div ng-repeat="item in vm.menuItems">
+			     <md-button  class="md-fab md-primary md-raised md-mini" ng-click="callFunction(item.cfunc,item.cfunc_par)">
+				   <md-tooltip md-direction="{{vm.t_direction}}" md-visible="false">{{item.name}}</md-tooltip>			     
+			       <md-icon class="material-icons">{{item.icon}}</md-icon>
+			     </md-button>
+			    </div>						        	        
+			    </md-fab-actions>
+			</md-fab-speed-dial>
+		     <md-content  layout="column" layout-fill flex class="page-content">
+		    	<ng-map id="MapA" zoom="{{vm.zoom}}" center="[{{vm.lat}} ,{{vm.lon}}]" 
+		    			style="height:100%;" 
+		    			on-click="vm.setCenter(event)"
+		    			tilt="0"
+						disable-double-click-zoom="true"
+						map-initialized = "vm.mapReady(map)"
+						map-type-control = "false"
+						disable-default-u-i="true"
+						zoom-to-include-markers="true"								    			
+		    			></ng-map>			
+					<div id="top1" class="search-map md-whiteframe-8dp">
+						<md-content style="position:relative;overflow:hidden;" flex="100" layout-padding>
+						<md-grid-list md-cols="12" md-row-height-gt-sm="50px" md-row-height="20px" md-gutter-gt-md="0px" md-gutter-md="0px" md-gutter="0px">
+						<md-grid-tile md-rowspan="1" md-colspan="10" md-colspan-md="10" md-colspan-sm="12" md-colspan-xs="12">																		
+							<md-input-container md-no-float class="md-icon-float md-icon-right">
+								  <md-icon  style="cursor:pointer" ng-click="vm.getLocation()" class="material-icons">gps_fixed</md-icon>																								
+							      <input id="addr" style="width:99%;height:100%" placeholder="Address / FIPS code" md-autofocus type="text" size=115 length="115"
+							      places-auto-complete ng-model="vm.address" 
+							      component-restrictions="{country:'us'}"
+		    					  on-place-changed="vm.gMplaceChanged()" />
+							      <md-icon style="cursor:pointer" ng-click="vm.searchAddr(vm.geocoder,vm.address)" class="material-icons">search</md-icon>
+			    			</md-input-container>
+			    			</md-grid-tile>
+			    			<md-grid-tile hide show-gt-sm md-rowspan="1" md-colspan="2">
+			    				<div layout-fill style="background-image: url('images/logo.png');background-repeat: no-repeat;background-position: center;background-size: 100% 100%;"></div>
+<!-- 							<a hide show-gt-sm href="https://www.fanniemae.com/singlefamily/homeready?cmpid=marqhomeready0915" target="_blank"><img  ng-src="images/logo.png" style="height:15%;width:auto;"></a> -->
+							</md-grid-tile>
+							</md-grid-list>
+							<md-grid-list  md-cols="12" md-row-height="20px">
+								<md-grid-tile  md-rowspan="1" md-colspan="2" class="legend-color-none">
+								No Limit
+								</md-grid-tile>							
+								<md-grid-tile  md-rowspan="1" md-colspan="2" class="legend-color-80">
+								80% AMI
+								</md-grid-tile>
+								<md-grid-tile  md-rowspan="1" md-colspan="2" class="legend-color-100">
+								100% AMI
+								</md-grid-tile>
+								<md-grid-tile style="cursor:pointer" ng-click="vm.loadListings('mls')"   md-rowspan="1" md-colspan="2" class="list-type">
+									<img src="images/markers/map-marker-2-32_blue.png" style="height:16px">
+									MLS&nbsp;
+								</md-grid-tile>
+								<md-grid-tile style="cursor:pointer" ng-click="vm.loadListings('homepath')"  md-rowspan="1" md-colspan="2" class="list-type">
+									<img  src="images/markers/map-marker-2-32_purple.png" style="height:16px">
+									HomePath
+								</md-grid-tile>																					
+			    			</md-grid-list>
+							<md-grid-list ng-style="{'background-color': vm.poly_info.bgColor}" class="animate-show" ng-show="vm.showInfo"  md-cols="12" md-row-height="20px">
+								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
+									<span style="font-weight: 900;opacity:1;"><b>{{vm.poly_info.limit}}</b></span>
+								</md-grid-tile>							
+								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
+									<span style="font-weight: 900;opacity:1;">{{vm.poly_info.ami}}</span>
+								</md-grid-tile>
+								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
+									<span style="font-weight: 900;opacity:1;">{{vm.poly_info.county}}</span>
+								</md-grid-tile>
+								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
+									<span style="font-weight: 900;opacity:1;">{{vm.poly_info.fips}}</span>
+								</md-grid-tile>																				
+			    			</md-grid-list>			    			
+						</md-content>													      		    			
+	    			</div>
+	    			<div flex class="logo md-whiteframe-1dp">
+		    			<md-content style="position:relative" flex="100" layout="column">
+		    				<a hide-gt-sm href="https://www.fanniemae.com/singlefamily/homeready?cmpid=marqhomeready0915" target="_blank"><img hide-gt-sm src="images/logo.png" style="height:50px;width:auto;"></a>
+			    			<img src="images/innovation.png" style="height:40px;width:auto;" >
+			    		</md-content>	
+	    			</div>		    				  					      								  
+	         </md-content>			  
+		</div>        
+    </body>
+    <!-- Application Dependencies -->
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-resource/angular-resource.min.js"></script>
+    <script src="node_modules/angular-animate/angular-animate.min.js"></script>
+    <script src="node_modules/angular-aria/angular-aria.min.js"></script>    
+    <script src="node_modules/angular-material/angular-material.min.js"></script>    
+    <script src="node_modules/angular-messages/angular-messages.min.js"></script>
+    <script src="node_modules/material-design-lite/material.min.js"></script>  
+    <script src="node_modules/ngstorage/ngStorage.min.js"></script>       
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDW37r8_c9wC_s0iptzekWUvahAU07nl-U&libraries=places,geometry"></script>    
+    <script src="node_modules/ngmap/ng-map.min.js"></script>
+	<script src="node_modules/markerclusterer/src/markerwithlabel.js"></script>
+	<script src="node_modules/markerclusterer/src/markerclusterer_compiled.js"></script>      
+    <!-- Application Scripts -->
+    <script src="app.js"></script>
+    <script src="scripts/gmaps_extenders.js"></script>
+    <script src="scripts/FormatsFactory.js"></script>
+    <script src="scripts/ListingsFactory.js"></script>    
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/waitController.js"></script>    
+    <script src="scripts/MainController.js"></script>      
+</html>
