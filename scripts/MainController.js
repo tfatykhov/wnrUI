@@ -3,8 +3,8 @@
 
     'use strict';
 
-    angular.module('HomeReadyApp')
-        .controller('MainController', ['$scope', '$http', '$timeout', '$mdSidenav', '$window', '$mdBottomSheet', '$localStorage', '$mdDialog', '$mdMedia',  'NgMap', 'FormatsFactory', 'ListingsFactory', 'utils', MainController])
+    angular.module('WnrUIApp')
+        .controller('MainController', ['$scope', '$http', '$timeout', '$mdSidenav', '$localStorage', '$mdDialog', '$mdMedia', '$state', 'province', 'HomeComponents', 'ApprForm', 'CurrForm', 'NgMap', MainController])
         .directive('fallbackSrc',fallbackSrc);
 
 function fallbackSrc(){
@@ -18,462 +18,226 @@ function fallbackSrc(){
 	return fallbackSrc;
 }    
     
-function MainController($scope, $http, $timeout, $mdSidenav, $window, $mdBottomSheet, $localStorage, $mdDialog, $mdMedia,NgMap,FormatsFactory, ListingsFactory, utils) {
-	var vm = this;
-	var originatorEv;
-	vm.formats = FormatsFactory;
-	vm.listings = ListingsFactory;
-	vm.listingList=[];
-	$scope.geoStat='NOK';
-	vm.menuItems=[];
-	vm.showInfo=false;
-	vm.poly_info=false;
-	$scope.storage=$localStorage;
-	
-	/* public functions definition */
-	vm.DialogController = DialogController;
-	vm.getLocation = getLocation;
-	vm.searchAddr = searchAddr;
-	vm.gMplaceChanged = gMplaceChanged;
-	vm.setCenter = setCenter;
-	vm.showAlert = showAlert;
-	vm.centerOnPlace = centerOnPlace;
-	vm.fetchPolygons = fetchPolygons;
-	vm.mapReady = mapReady;
-	vm.loadListings = loadListings;
-	vm.clearListings = clearListings;
-	/**********************************/
-	
-	vm.geocoder =  new google.maps.Geocoder();
-	$scope.degrees=$window.orientation;
-	$scope.vm.m_direction=($scope.degrees==0 || $scope.degrees==180 ? 'up' : 'right');
-	$scope.vm.t_direction=($scope.vm.m_direction=='up' ? 'right' : 'up'); 
+function MainController($scope, $http, $timeout, $mdSidenav, $localStorage, $mdDialog, $mdMedia,  $state, province, HomeComponents, ApprForm,CurrForm,NgMap) {
 
-	vm.gMtypes = "['address']";
-	
-    $scope.init = function (debug) {
-		vm.point = null;
-		vm.marker = null;
-		vm.subjectPoly = null;
-		vm.polys = [];
-		vm.labels = [];
-		vm.numFetches = 0;
-		vm.mlsListings = [];
-		vm.hpListings = [];
-		vm.filteredListings = [];
-		vm.incomeLimit = '';
-		vm.DEBUG = debug || false;
+    var vm = this;
+    var originatorEv;
+	$scope.geoStat='NOK';
+    vm.menuItems=[];
+ 	$scope.storage=$localStorage;
+    vm.onSubmit = onSubmit;
+    vm.DialogController = DialogController;
+    vm.toggleItemsList = toggleItemsList;
+    vm.selectItem = selectItem;
+     
+    $scope.init = function () {
+   	
     	vm.menuItems = [
     	                {
-      	                  name: 'Affordability Calculator',
-      	                  icon: 'add_box',
-      	                  sref: '',
-      	                  cfunc: 'openUrl',
-      	                  cfunc_par : 'https://www.homepath.com/calculators_pop/index.html?type=affordability&ht=900'
-      	                },    	                
+    	                  name: 'Home Status',
+    	                  icon: 'home',
+    	                  sref: 'list'
+    	                },
     	                {
-      	                  name: 'Help',
-      	                  icon: 'help',
-      	                  sref: '',
-      	                  cfunc: 'openUrl',
-      	                  cfunc_par : 'https://www.fanniemae.com/content/fact_sheet/homeready-income-eligibility-tool-tips.pdf'
-          	            }, 
-          	            {
-    	                  name: 'Homes on Market',
-      	                  icon: 'home',
-      	                  sref: '',
-      	                  cfunc: 'loadListings',
-      	                  cfunc_par : '"mls homepath"'
-          	            }/*,          	            
+    	                  name: 'Controls',
+    	                  icon: 'donut_small',
+    	                  sref: 'conrtols'
+    	                },
     	                {
-    	                  name: 'Email',
-    	                  icon: 'mail',
-    	                  sref: '',
-    	                  cfunc: 'showToolTips'
-    	                }*/
+    	                  name: 'Cameras',
+    	                  icon: 'videocam',
+    	                  sref: 'cams'
+    	                },
+    	                {
+    	                  name: 'Family',
+    	                  icon: 'group',
+    	                  sref: 'family'
+    	                },
+    	                {
+    	                  name: 'Configuration',
+    	                  icon: 'settings',
+    	                  sref: 'config'
+    	                }            
+    	          /*      {
+    	                    name: 'Upload Pictures',
+    	                    icon: 'add_circle',
+    	                    sref: 'upPic'
+    	                  },*/      
 /*    	                {
-      	                  name: 'Share',
-      	                  icon: 'share',
-      	                  sref: '',
-      	                  click: 'showToolTips'
-      	                } */    	                
+    	                    name: 'Search',
+    	                    icon: 'search',
+    	                    sref: 'search'
+    	                  }*/
+/*    	                {
+    	                    name: 'Help',
+    	                    icon: 'help',
+    	                    sref: 'help'
+    	                  }*/
     	              ];
-
+/*        ApprForm.getPropList('/tp/form/props').then(function(response){
+        	$scope.vm.propertyList=(response=='error' ? ApprForm.defaultPropList() : response.prop_list);
+        });*/
+//        $scope.vm.propertyList=getLocalPropList($scope.storage);
+    	$scope.vm.userId='s6utyf'; 
+        ApprForm.getMainForm('/tp/form/MainForm',$scope.storage).then(function(ApprResponse){
+            $scope.vm.form= ApprForm.getLocalFormDef($scope.storage);
+        });
+        vm.property ={};
+        $scope.form_progress = 0;
+        vm.title = vm.menuItems[0].name;  
+        $scope.form_progress=0;
+        $scope.form = vm.property;
+        $scope.vm.createdBy='s6utyf'; 
+        $scope.vm.frontImage='/front/1';
     };
-    $scope.init(false);
- 	
+    $scope.init();
     
- 	function mapReady(map){
- 		var clusterStyles = [
- 		                    {
- 		                      url: 'node_modules/markerclusterer/images/m1.png',
- 		                      height: 53,
- 		                      width: 53
- 		                    },
- 		                    {
- 	 		                      url: 'node_modules/markerclusterer/images/m2.png',
- 	 		                      height: 56,
- 	 		                      width: 56
- 	 		                    },
- 	 		                    {
- 	  		                      url: 'node_modules/markerclusterer/images/m3.png',
- 	  		                      height: 66,
- 	  		                      width: 66
- 	  		                    },
- 	  		                    {
- 	  		                      url: 'node_modules/markerclusterer/images/m4.png',
- 	  		                      height: 78,
- 	  		                      width: 78
- 	  		                    },
- 	  		                    {
- 	  		                      url: 'node_modules/markerclusterer/images/m5.png',
- 	  		                      height: 90,
- 	  		                      width: 90
- 	  		                    }
- 		                  ];
- 		vm.map = map;
- 		vm.clusterer = new MarkerClusterer($scope.map,[],{
-			averageCenter:true,
-			maxZoom:16,
-			minimumClusterSize:10,
-			styles:clusterStyles,
-		});	
- 	google.maps.event.addListener(map, 'idle', function(event) {
- 	    var cnt = map.getCenter();
- 	    cnt.e+=0.000001;
- 	    map.panTo(cnt);
- 	    cnt.e-=0.000001;
- 	    map.panTo(cnt);
- 	});
- 	 getLocation();		
-		if (vm.DEBUG) console.log('Clusterer initialized '+ vm.clusterer);
- 	}
- 	
-	function gMplaceChanged() {
-		  vm.gMplace = this.getPlace();
-		  if ('geometry' in vm.gMplace){
-			vm.lat = vm.gMplace.geometry.location.lat();
-			vm.lon = vm.gMplace.geometry.location.lng();
-			vm.centerOnPlace(vm.address,vm.lat,vm.lon); 			
-		  } else if ('name' in vm.gMplace) vm.searchAddr(vm.geocoder,vm.gMplace.name);
-	  }
- 	 $scope.getWindowOrientation = function () {
- 	    return $window.orientation;
- 	  };
- 	  
- 	  $scope.$watch($scope.getWindowOrientation, function (newValue, oldValue) {
- 	    $scope.degrees = newValue;
- 	    $scope.vm.m_direction=($scope.degrees==0 || $scope.degrees==180 ? 'up' : 'right');
- 	   $scope.vm.t_direction=($scope.vm.m_direction=='up' ? 'right' : 'top');
- 	  }, true);
-
- 	  angular.element($window).bind('orientationchange', function () {
- 	    $scope.$apply();
- 	  });
- 	
- 	    $scope.callFunction = function (name,param){
-        if(angular.isFunction($scope[name]))
-           $scope[name](param);
-        else if (angular.isFunction($scope.vm[name]))
-        	$scope.vm[name](param);
-    }
- 	
- 	    
-    function getLocation() {
-        if (navigator.geolocation) {
-        	vm.address="";
-            navigator.geolocation.getCurrentPosition(getPosition, showError);
-        } else {
-        	 if (vm.DEBUG) console.log("Geolocation is not supported by this browser.");
-        }
-    }
-
-    function getPosition(position) {
-        vm.lat = position.coords.latitude;
-        vm.lon = position.coords.longitude;
-        vm.zoom = 15;
-        var pos=new google.maps.LatLng(vm.lat,vm.lon)
-        if ($scope.map){
-        	vm.centerOnPlace(vm.address,vm.lat,vm.lon); 
-        }
+    this.openMenu = function($mdOpenMenu, ev) {
+      originatorEv = ev;
+      $mdOpenMenu(ev);
+    };
+    //loading properties from local storage or remote storage
+    $scope.getProps = function(){
+    	ApprForm.getPropList($scope.vm.userId,$scope.storage)
+    	 .then(function(res){
+    		 $scope.vm.propertyList=res;
+    	    	console.log('got properties:');
+    	    	console.log($scope.vm.propertyList);
+    	 });
+    		//ApprForm.getLocalPropList($scope.storage);
+    };
+    
+    $scope.getCams = function(){
+        HomeComponents.getCameras()
+        .then(function(res){
+            $scope.vm.cameras=res.cameras;
+            console.log('got cameras:');
+            console.log($scope.vm.cameras);
+        })
     }
     
-    function showError(error) {
-    	vm.lat=38.9451033
-    	vm.lon=-77.06450970000003;
-    	vm.zoom = 15;    	
-        var pos=new google.maps.LatLng(vm.lat,vm.lon)
-        if ($scope.map) {
-		    vm.centerOnPlace(vm.address,vm.lat,vm.lon);        	        	
-        }
-        switch(error.code) {
-            case error.PERMISSION_DENIED:
-                if (vm.DEBUG) console.log("User denied the request for Geolocation.")
-                break;
-            case error.POSITION_UNAVAILABLE:
-                if (vm.DEBUG) console.log("Location information is unavailable.")
-                break;
-            case error.TIMEOUT:
-            	 if (vm.DEBUG) console.log("The request to get user location timed out.")
-                break;
-            case error.UNKNOWN_ERROR:
-            	 if (vm.DEBUG) console.log("An unknown error occurred.")
-                break;
-        }
-    }    
     
-    $scope.openUrl = function(url){
-    	var toolTipUrl= url ||  "http://fanniemae.com";
-    	window.open(toolTipUrl,"_blank");
-    }
-
-  function searchAddr(geocoder,address) {
-	  if (address && address.length == 11 && /^\d+$/.test(address)){ //11 digits FIPS
-            var req = {
-            		cache : false,
-                    method: 'GET',
-                    url: '/hr/fips/'+address,
-                    headers :{
-                        'Cache-Control': 'no-cache'
-                    }
-                }
-            	$http(req).then(function(response){
-            		if (vm.DEBUG) console.log('executed: '+req.url);
-            		if (vm.DEBUG) console.log(response);
-            		vm.lat = response.data.lat;
-            		vm.lon = response.data.lng;
-            		var pos=new google.maps.LatLng(vm.lat,vm.lon)
-                    if ($scope.map){
-    				    vm.centerOnPlace(null,vm.lat,vm.lon);
-                    }
-            		},
-            		function(response){
-            			if (vm.DEBUG) console.log('url: '+req.url+' error '+JSON.stringify(response));
-            		});
-	  } else {
-		  geocoder.geocode({'address' : address,
-			  componentRestrictions: {
-				    country: 'USA'
-			  	}
-			  }, function(results, status){
-			  if (status === google.maps.GeocoderStatus.OK) {
-				    vm.lat = results[0].geometry.location.lat();
-				    vm.lon = results[0].geometry.location.lng();
-				    vm.centerOnPlace(address,vm.lat,vm.lon);
-			  } else { alert('Unable to geocode: '+ status)
-				  }
-		  });
-	  }
-	  };
+    $scope.validateForm = function (){
+        if ('propertyForm' in $scope.vm && '$invalid' in $scope.vm.propertyForm && $scope.vm.propertyForm.$invalid) {
+            
+            angular.forEach( $scope.vm.propertyForm.$error, function (field) {
+              angular.forEach(field, function(errorField){
+                errorField.$setTouched();
+              })
+            });
+        }    	
+    };
     
-	  function setCenter (event) {
-		    vm.lat = event.latLng.lat();
-		    vm.lon = event.latLng.lng();
-		    vm.centerOnPlace(null,vm.lat,vm.lon);		  
-		  }
-    
-	  function centerOnPlace(address,lat,lng){
-		 if(!lat || !lng) {
-			 vm.showAlert('Invalig geo position'); 
-			 return false;
-		 }
-		vm.showInfo=false; 
-		utils.showWait();
-		vm.clearListings();
-	  	vm.point=new google.maps.LatLng(lat,lng);
-		vm.incomeLimit='';
-		if(vm.marker) vm.marker.setMap(null);
-		for(var i=0; i < vm.polys.length; i++) vm.polys[i].setMap(null);
-		for(var i=0; i < vm.labels.length; i++) vm.labels[i].setMap(null);
-		
-		// center and zoom map, get bounds
-		$scope.map.setCenter(vm.point,$scope.map.getZoom());
-		var bounds = $scope.map.getBounds();
-		var ne = bounds.getNorthEast();
-		var sw = bounds.getSouthWest();
-		var latlo = sw.lat();
-		var lnglo = sw.lng();
-		var lathi = ne.lat();
-		var lnghi = ne.lng();	
-		vm.fetchPolygons(lat,lng,latlo,lnglo,lathi,lnghi,address,false,false);
-	  }
-    
-	  function fetchPolygons(lat,lng,latlo,lnglo,lathi,lnghi,addy,show,rooftop){	
-		// empty polygons and marker arrays
-		vm.polys=[];
-		vm.labels=[];
-        var req = {
-        		cache : false,
-                method: 'GET',
-                url: '/hr/tracts/point/'+lat+'/'+lng,
-            }
-        $http(req).then(function(response){
-        	var j = response.data;
-        	if (vm.DEBUG) console.log ('executed '+ req.url);
-        	if (vm.DEBUG) console.log(j);
-
-        	var county = '';
-			for(var i=0;i<j.length;i++){
-				var d = j[i];
-	
-				// create polygon
-				var geom = [];
-				var p = d.geom.match(/\(\(([^)]+)\)/)[1];
-				var points = p.split(',');
-				for(var n=0; n<points.length; n++) {
-					var point = points[n].trim().split(' ');
-					geom.push(new google.maps.LatLng(parseFloat(point[1]),parseFloat(point[0])));
-				}
-				var poly = new google.maps.Polygon({
-					paths: geom,
-					fillColor: vm.formats.polyFillColor(d.elig),
-					fillOpacity: 0.5,
-					clickable:true,
-					map:$scope.map
-				});
-				vm.formats.polySetType(poly,(d.subj=='Y' ? 'Active' : 'Normal'));
-				if(d.subj=='Y') {
-					vm.subjectPoly = poly;
-					$scope.map.fitBounds(poly.getBounds());
-					county = d.tract.substring(0,5);
-					vm.incomeLimit = (d.limit ? vm.formats.fdol(d.limit) : 'No Income Limit');
-				}
-				
-				// label
-				//var hom = $('input[name="listings-switch"]').is(":checked") ? 'nodisplay' : '';
-				var hom = '';
-				var poly_info={
-						limit : (d.limit ?  'Income Limit: '+ vm.formats.fdol(d.limit) : ''),
-						ami : (d.ami && d.ami>0 ? 'AMI: '+vm.formats.fdol(d.ami) : ''),
-						county : (d.county ? d.county : false),
-						fips : (d.tract ? 'FIPS: '+ d.tract : false),
-						bgColor : vm.formats.polyFillColor(d.elig)
-				}
-				if(d.subj=='Y') vm.poly_info=poly_info;
-				poly.poly_info=poly_info;
-				// poly event handlers
-				google.maps.event.addListener(poly,"click",function(){
-					for (var p in vm.polys) {
-						if (vm.polys[p].my_id!== p) vm.formats.polySetType(vm.polys[p],'Normal');
-					}
-					vm.formats.polySetType(this,'Active');
-					$scope.vm.poly_info=this.poly_info;
-					$scope.$apply();
-					$scope.map.setCenter(this.getCenter(),$scope.map.getZoom());
-					$scope.map.fitBounds(this.getBounds());
-				}); 
-				poly.my_id=i;
-				vm.polys.push(poly);				
-		}
-		if(county){
-			// make marker of searched address
-			if(show){
-				if(rooftop){
-					vm.marker = new google.maps.Marker({
-						position:o.point,
-						map: o.map,
-						title: addy,
-						icon: 'img/markers/home.png'
-					});
-//					o.showOutput('G');
-				} else {
-//					o.showOutput('B');
-				}
-			}
-			
-			// county polygon
-			var reqC = {
-	        		cache : false,
-	                method: 'GET',
-	                url: '/hr/county/' + county
+    //loading form from local storage
+    $scope.loadForm = function(apprId){
+   	if (typeof CurrForm.getForm('apprId')!=='undefined' && typeof CurrForm.getForm('formData')!=='undefined' &&  'str_addr' in CurrForm.getForm('formData')){
+    		CurrForm.saveLocal($scope.storage,vm.property);
+    	}
+		CurrForm.reset();    	
+    	CurrForm.setForm('apprId',apprId);
+    	console.log('opened form, id:'+CurrForm.getForm('apprId'));
+    	CurrForm.loadFromLocal($scope.storage,function(){
+	    	vm.property=CurrForm.getForm('formData');
+	    	$scope.form_progress=CurrForm.getForm('progress');
+	    	$scope.formId=CurrForm.getForm('formId');
+	    	$scope.formStatus=CurrForm.getForm('status');
+	    	$scope.form = vm.property;
+	    	$scope.geoStat=CurrForm.getForm('geoStat');
+	    	vm.title=vm.property.str_addr;
+	    	vm.progress=$scope.form_progress;	    	
+    	});
+    };
+    //initiates new form
+    $scope.startNewForm = function(){
+    	if (typeof CurrForm.getForm('apprId')!=='undefined' && typeof CurrForm.getForm('formData')!=='undefined' &&  'str_addr' in CurrForm.getForm('formData')){
+    		CurrForm.saveLocal($scope.storage,vm.property);
+    	}
+		CurrForm.reset();
+    	vm.property = {};
+    	$scope.geoStat="NOK"
+    	CurrForm.setForm('apprId',CurrForm.guid());
+    	CurrForm.setForm('formId',$scope.vm.form.formId);
+    	CurrForm.setForm('createdBy',$scope.vm.createdBy);
+    	CurrForm.setForm('status','in progress');
+    	CurrForm.setForm('geoStat',$scope.geoStat);
+       	CurrForm.setForm('upi',"");   	
+    	console.log('started new form, id:'+CurrForm.getForm('apprId'));
+    	$scope.form = vm.property;
+    	$scope.form_progress = 1;
+    	$scope.formId = vm.form.id;
+    	vm.title='Add new property';
+       	//vm.showAddrPrompt();
+    };
+       
+    //watching on form changes
+    $scope.$watch('form', function(newVal,oldVal){
+    	//form_progress = CurrForm.getForm('progress') || 0;
+    	$scope.storage=$localStorage;
+        var total=0;
+        var cmp=0;
+    	$scope.validateForm();        
+        if (newVal!==oldVal){
+	        for(var f in $scope.vm.propertyForm){
+	             if(f.indexOf('vm.')!=-1){
+	             var field = $scope.vm.propertyForm[f];
+	            	 total++;
+	            	 if (field.$valid && (field.$modelValue===field.$modelValue)) cmp++;
+	             }
+	        }
+	        if (total>0) {
+	        	if (($scope.geoStat==="NOK" || typeof $scope.geoStat==='undefined') && CurrForm.haveAddress()) {
+	        		CurrForm.geocodeAddrress().then(function(res){
+	        			if (res.status=="200" && res.data.street!=="" && res.data.lat!=="null"){
+	        				vm.property.str_addr=res.data.street;
+	        			    vm.property.city=res.data.city;
+	        			    vm.property.zip=res.data.zip;
+	        			    vm.property.state=res.data.state;
+	        			    vm.property.lat=res.data.lat;
+	        			    vm.property.lng=res.data.lng;
+	        			    $scope.geoStat='OK';
+	        			    CurrForm.setForm('geoStat',$scope.geoStat);
+	        			}
+	        		});
+	        	}
+	        	$scope.form_progress=(cmp>0 ? cmp*100/total : 0);
+	        	vm.progress=$scope.form_progress;
+	            CurrForm.setForm('progress',$scope.form_progress);
+	            if ($scope.form_progress==100){
+	            	console.log($scope.form_progress);
+	            	CurrForm.setForm('status','complete');
 	            }
-	        $http(reqC).then(function(response){
-	        	var j3 = response.data;
-	        	if (vm.DEBUG) console.log ('executed '+ reqC.url);
-	        	if (vm.DEBUG) console.log(j3);
-				var geom = [];
-				var p = j3.geom.match(/\(\(([^)]+)\)/)[1];
-				var points = p.split(',');
-				for(var n=0; n<points.length; n++) {
-					var point = points[n].trim().split(' ');
-					geom.push(new google.maps.LatLng(parseFloat(point[1]),parseFloat(point[0])));
-				}
-				var county = new google.maps.Polygon({
-					paths: geom,
-					strokeColor: '#FE2E2E',
-					strokeOpacity: 1,
-					strokeWeight: 6,
-					fillOpacity: 0,
-					clickable:false,
-					map:$scope.map
-				});
-				vm.polys.push(county);
-				utils.hideWait();
-			},
-			  function(response){
-				utils.hideWait();
-    			if (vm.DEBUG) console.log('url: '+req.url+' error '+JSON.stringify(response));
-			}); // end of county
-		};
-		vm.showInfo=true;
-		//vm.loadListings('mls',vm.clusterer,vm.listingList);
-	  },
-	  function(response){
-		  utils.hideWait();
-		  if (vm.DEBUG) console.log('url: '+req.url+' error '+JSON.stringify(response));
-       });
-	  }
+	        }
+        }
+        if (newVal!==oldVal && 'str_addr' in newVal) {
+        	CurrForm.saveLocal($scope.storage,vm.property);
+        	if ($scope.geoStat='OK') {        
+        		$timeout(function() {
+            	CurrForm.saveRemote('/tp/form/apprsl/'+$scope.vm.userId+'/'+CurrForm.getForm('apprId'),JSON.stringify(CurrForm.loadFromLocal($scope.storage)));   
+            }, 0);
+        	}
+        }
+    }, true);
+    // TODO add function to reset status when address changes
+    //on form submit placeholder for now
+    
 
-function clearListings(){
-	angular.forEach(vm.listingList, function(value){
-		value.marker.setMap(null);
-	});
-	vm.listingList=[];
-	vm.clusterer.clearMarkers();
-}	  
-	  
-function loadListings(type) {
-	
-	var bounds = $scope.map.getBounds();
-	var ne = bounds.getNorthEast();
-	var sw = bounds.getSouthWest();
-	var area={};
-	area.latlo = sw.lat();
-	area.lnglo = sw.lng();
-	area.lathi = ne.lat();
-	area.lnghi = ne.lng();
-	area.start = 0;
-	area.limit = 500;
-	vm.clearListings();
-	if (type.indexOf('mls') !=-1){
-		utils.showWait();
-		vm.listings.getMlsListings(area,vm.clusterer,vm.listingList);
-	}
-	if (type.indexOf('homepath') !=-1){
-		utils.showWait();
-		vm.listings.getHopepathListings(area,vm.clusterer,vm.listingList);
-	}
-	$timeout(function(){
-		utils.hideWait();
-		$scope.map.fitBounds(bounds);
-	},2000);
-	//$scope.map.fitBounds(bounds);
-}	  
-	  
-/* modal dialog functions */	  
-	  function showAlert(alertText) {
-	      alert = $mdDialog.alert({
-	        title: 'Attention',
-	        textContent: alertText,
-	        ok: 'Close'
-	      });
-	      $mdDialog
-	        .show(alert)
-	        .finally(function() {
-	          alert = undefined;
-	        });
-	    }	  
-	  
+    function onSubmit() {
+        $timeout(function() {
+        	CurrForm.saveRemote('/tp/form/apprsl/'+$scope.vm.userId+'/'+CurrForm.getForm('apprId'),JSON.stringify(CurrForm.loadFromLocal($scope.storage)));   
+          }, 0);
+    };
+    
+    
+    function toggleItemsList() { 
+        $mdSidenav('left').toggle();
+    };
+    
+    
+    function selectItem (item) {
+      vm.title = item.name;
+      vm.toggleItemsList();
+    };
+    
     $scope.vm.showGallery = function(ev,apprId) {
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
         $mdDialog.show({
@@ -488,11 +252,11 @@ function loadListings(type) {
         	  },
           fullscreen: useFullScreen
         })
-        .then(function(answer) {
+/*        .then(function(answer) {
           $scope.status = 'You said the information was "' + answer + '".';
         }, function() {
           $scope.status = 'You cancelled the dialog.';
-        });
+        });*/
         $scope.$watch(function() {
           return $mdMedia('xs') || $mdMedia('sm');
         }, function(wantsFullScreen) {
@@ -517,42 +281,25 @@ function loadListings(type) {
           });
         };
         
-
-        $scope.vm.showGridBottomSheet = function() {
-            $scope.alert = '';
-            $mdBottomSheet.show({
-              templateUrl: 'templates/bottomInfoSheet.html',
-              parent: angular.element(document.getElementById('top1')),
-              disableParentScroll: false,
-              controller: GridBottomSheetCtrl,
-              clickOutsideToClose: true
-            }).then(function(clickedItem) {
-              $mdToast.show(
-                    $mdToast.simple()
-                      .textContent(clickedItem['name'] + ' clicked!')
-                      .position('top right')
-                      .hideDelay(1500)
-                  );
-            });
-          };      
+        $scope.vm.showAddrPrompt = function(ev) {
+        	var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+        	 $mdDialog.show({
+                 controller: GeoDialogController,
+                 templateUrl: 'templates/addrgeo.tmpl.html',
+                 parent: angular.element(document.body),
+                 targetEvent: ev,
+                 clickOutsideToClose:false,
+                 escapeToClose : false,
+                 fullscreen: useFullScreen
+               })
+               $scope.$watch(function() {
+                 return $mdMedia('xs') || $mdMedia('sm');
+               }, function(wantsFullScreen) {
+                 $scope.customFullscreen = (wantsFullScreen === true);
+               });
+             };
+      
   
-
-  function GridBottomSheetCtrl ($scope, $mdBottomSheet) {
-	  $scope.items = [
-	    { name: 'Hangout', icon: 'hangout' },
-	    { name: 'Mail', icon: 'mail' },
-	    { name: 'Message', icon: 'message' },
-	    { name: 'Copy', icon: 'copy2' },
-	    { name: 'Facebook', icon: 'facebook' },
-	    { name: 'Twitter', icon: 'twitter' },
-	  ];
-/*	  $scope.listItemClick = function($index) {
-	    var clickedItem = $scope.items[$index];
-	    $mdBottomSheet.hide(clickedItem);
-	  };*/
-	};         
-          
-          
   function DialogController($scope, $mdDialog) {
 	  
 	  $scope.hide = function() {
@@ -572,5 +319,54 @@ function loadListings(type) {
 	    $mdDialog.cancel();
 	  };
 	}
-   }
+  
+  function GeoDialogController($scope, $mdDialog) {
+	  $scope.gMtypes = "['address']";
+	  $scope.gMplaceChanged = function() {
+		  $scope.gMplace = this.getPlace();
+	  }	
+	  
+	  $scope.close = function() {
+		  alert('close')
+			$state.go('list');		  
+		    $mdDialog.cancel();
+	  };	
+	  $scope.hide = function() {
+		  alert('close');		  
+		$state.go('list');		  
+	    $mdDialog.cancel();
+	  };
+	  $scope.cancel = function() {
+		$scope.geoStat='OK';
+		$state.go('list');
+	    $mdDialog.cancel();
+	  };
+	  $scope.go = function() {
+		if ( $scope.gMplace && 'address_components' in  $scope.gMplace) {
+			var addr_cmp=$scope.gMplace.address_components;  
+			var str_addr={
+			str_addr:"",
+			 street_number:"",
+			 route:"",
+			 locality:"",
+			 administrative_area_level_1:"",
+			 postal_code:""
+			};
+		    addr_cmp.forEach(function(c,index){
+		    	if ('types' in c && c.types[0] in str_addr) str_addr[c.types[0]]=c.short_name;
+		    });
+		    str_addr.str_addr=str_addr.street_number+' '+str_addr.route;
+		    vm.property.str_addr=str_addr.str_addr;
+		    vm.property.city=str_addr.locality;
+		    vm.property.zip=str_addr.postal_code;
+		    vm.property.state=str_addr.administrative_area_level_1;
+		    vm.property.lat=$scope.gMplace.geometry.location.lat();
+		    vm.property.lng=$scope.gMplace.geometry.location.lng();
+		    $scope.geoStat='OK';
+		  }		    
+		    $state.go('addNew');
+    	    $mdDialog.hide();
+	  };
+	}
+    }
 })();

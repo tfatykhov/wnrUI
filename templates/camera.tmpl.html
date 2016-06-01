@@ -1,0 +1,22 @@
+<md-content ng-cloack flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+    <md-card layout="column" ng-repeat="c in vm.cameras" md-theme="dark-blue-grey" md-theme-watch>
+        <md-card-title>
+            <md-card-title-text>
+            <span class="md-headline">{{c.name}}</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content layout="row" layout-align="center center">
+            <div style="height:240px;display:block;">
+                <img ng-src="{{c.url}}" fallback-src="images/house.jpg" class="md-card-image" style="max-height:240px;max-width:auto;self-align:center;" alt="Washed Out"><br>
+            </div>
+    </md-card-content>
+    <md-card-actions layout="row" layout-align="end center">
+        <md-button class="md-icon-button md-primary md-hue-1" aria-label="Pictures" ng-click="vm.showGallery($event,p.apprId)">
+                <md-icon class="material-icons">camera_roll</md-icon>
+        </md-button>	    
+        <md-button class="md-icon-button md-primary  md-hue-1" aria-label="Directions" ng-click="vm.showAddrPrompt($event)">
+                <md-icon class="material-icons">photo_camera</md-icon>
+        </md-button>
+    </md-card-actions>        
+    </md-card>
+</md-content>

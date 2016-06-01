@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html manifest="manifest.cache">
+<html>
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
-        <meta name="description" content="HomeReady 2.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="NewAlpha Mobile">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-        <title>HomeReady 2.0</title>    
+        <title>WNR UI 2.0</title>    
         <!-- Add to homescreen for Chrome on Android -->
         <meta name="mobile-web-app-capable" content="yes">
           <!-- Add to homescreen for Safari on iOS -->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="apple-mobile-web-app-title" content="HomeReady 2.0">
+        <meta name="apple-mobile-web-app-title" content="TurboPraise 2.0">
         <!-- Icons -->
         <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
@@ -31,119 +31,105 @@
         <link rel="shortcut icon" href="icons/favicon-32x32.png">    
         <!-- Styles -->       
         <link rel="stylesheet" type="text/css" href="node_modules/angular-material/angular-material.css">
-        <link rel="stylesheet" href="css/roboto.css" type="text/css"> 
+        <link rel="stylesheet" href="css/roboto.css" type="text/css">
+     <!--  <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  -->   
         <link rel="stylesheet" href="node_modules/material-design-lite/dist/material.blue-deep_orange.min.css">
         <link rel="stylesheet" href="css/style.css">  
     </head>
-    <body ng-app="HomeReadyApp" ng-controller="MainController as vm">
-		<div id="Screen1" layout-fill  layout="row" style="overflow:hidden;" ng-cloak>    
-			<md-fab-speed-dial class="md-fling md-fab-bottom-left" md-open="false"  md-direction="{{vm.m_direction}}">
-			 <md-fab-trigger>
-			   <md-button aria-label="menu" class="md-fab md-primary">		   
-			     <md-icon class="material-icons">apps</md-icon>
-			   </md-button>
-			 </md-fab-trigger>
-			   <md-fab-actions>
-			   <div ng-repeat="item in vm.menuItems">
-			     <md-button  class="md-fab md-primary md-raised md-mini" ng-click="callFunction(item.cfunc,item.cfunc_par)">
-				   <md-tooltip md-direction="{{vm.t_direction}}" md-visible="false">{{item.name}}</md-tooltip>			     
-			       <md-icon class="material-icons">{{item.icon}}</md-icon>
-			     </md-button>
-			    </div>						        	        
-			    </md-fab-actions>
-			</md-fab-speed-dial>
-		     <md-content  layout="column" layout-fill flex class="page-content">
-		    	<ng-map id="MapA" zoom="{{vm.zoom}}" center="[{{vm.lat}} ,{{vm.lon}}]" 
-		    			style="height:100%;" 
-		    			on-click="vm.setCenter(event)"
-		    			tilt="0"
-						disable-double-click-zoom="true"
-						map-initialized = "vm.mapReady(map)"
-						map-type-control = "false"
-						disable-default-u-i="true"
-						zoom-to-include-markers="true"								    			
-		    			></ng-map>			
-					<div id="top1" class="search-map md-whiteframe-8dp">
-						<md-content style="position:relative;overflow:hidden;" flex="100" layout-padding>
-						<md-grid-list md-cols="12" md-row-height-gt-sm="50px" md-row-height="20px" md-gutter-gt-md="0px" md-gutter-md="0px" md-gutter="0px">
-						<md-grid-tile md-rowspan="1" md-colspan="10" md-colspan-md="10" md-colspan-sm="12" md-colspan-xs="12">																		
-							<md-input-container md-no-float class="md-icon-float md-icon-right">
-								  <md-icon  style="cursor:pointer" ng-click="vm.getLocation()" class="material-icons">gps_fixed</md-icon>																								
-							      <input id="addr" style="width:99%;height:100%" placeholder="Address / FIPS code" md-autofocus type="text" size=115 length="115"
-							      places-auto-complete ng-model="vm.address" 
-							      component-restrictions="{country:'us'}"
-		    					  on-place-changed="vm.gMplaceChanged()" />
-							      <md-icon style="cursor:pointer" ng-click="vm.searchAddr(vm.geocoder,vm.address)" class="material-icons">search</md-icon>
-			    			</md-input-container>
-			    			</md-grid-tile>
-			    			<md-grid-tile hide show-gt-sm md-rowspan="1" md-colspan="2">
-			    				<div layout-fill style="background-image: url('images/logo.png');background-repeat: no-repeat;background-position: center;background-size: 100% 100%;"></div>
-<!-- 							<a hide show-gt-sm href="https://www.fanniemae.com/singlefamily/homeready?cmpid=marqhomeready0915" target="_blank"><img  ng-src="images/logo.png" style="height:15%;width:auto;"></a> -->
-							</md-grid-tile>
-							</md-grid-list>
-							<md-grid-list  md-cols="12" md-row-height="20px">
-								<md-grid-tile  md-rowspan="1" md-colspan="2" class="legend-color-none">
-								No Limit
-								</md-grid-tile>							
-								<md-grid-tile  md-rowspan="1" md-colspan="2" class="legend-color-80">
-								80% AMI
-								</md-grid-tile>
-								<md-grid-tile  md-rowspan="1" md-colspan="2" class="legend-color-100">
-								100% AMI
-								</md-grid-tile>
-								<md-grid-tile style="cursor:pointer" ng-click="vm.loadListings('mls')"   md-rowspan="1" md-colspan="2" class="list-type">
-									<img src="images/markers/map-marker-2-32_blue.png" style="height:16px">
-									MLS&nbsp;
-								</md-grid-tile>
-								<md-grid-tile style="cursor:pointer" ng-click="vm.loadListings('homepath')"  md-rowspan="1" md-colspan="2" class="list-type">
-									<img  src="images/markers/map-marker-2-32_purple.png" style="height:16px">
-									HomePath
-								</md-grid-tile>																					
-			    			</md-grid-list>
-							<md-grid-list ng-style="{'background-color': vm.poly_info.bgColor}" class="animate-show" ng-show="vm.showInfo"  md-cols="12" md-row-height="20px">
-								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
-									<span style="font-weight: 900;opacity:1;"><b>{{vm.poly_info.limit}}</b></span>
-								</md-grid-tile>							
-								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
-									<span style="font-weight: 900;opacity:1;">{{vm.poly_info.ami}}</span>
-								</md-grid-tile>
-								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
-									<span style="font-weight: 900;opacity:1;">{{vm.poly_info.county}}</span>
-								</md-grid-tile>
-								<md-grid-tile  md-rowspan="1" md-colspan="3" class="detail-type">
-									<span style="font-weight: 900;opacity:1;">{{vm.poly_info.fips}}</span>
-								</md-grid-tile>																				
-			    			</md-grid-list>			    			
-						</md-content>													      		    			
-	    			</div>
-	    			<div flex class="logo md-whiteframe-1dp">
-		    			<md-content style="position:relative" flex="100" layout="column">
-		    				<a hide-gt-sm href="https://www.fanniemae.com/singlefamily/homeready?cmpid=marqhomeready0915" target="_blank"><img hide-gt-sm src="images/logo.png" style="height:50px;width:auto;"></a>
-			    			<img src="images/innovation.png" style="height:40px;width:auto;" >
-			    		</md-content>	
-	    			</div>		    				  					      								  
-	         </md-content>			  
-		</div>        
+    <body ng-app="WnrUIApp" ng-controller="MainController as vm">
+        <div layout-fill  layout="row" style:="overflow:hidden;" ng-cloak>    
+            <md-sidenav  md-is-locked-open="$mdMedia('gt-md')" md-component-id="left"
+                        class="md-sidenav-left mdl-color--blue-grey-200">
+              <md-toolbar  class="md-hue-2 md-whiteframe-z2">
+                    <header class="turbop-drawer-header mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+                         <span class="mdl-layout-title" style="letter-spacing: .03em;font-weight: 800;align-self: center;">Wink Node Red UI 2.0</span>
+                         <div class="mdl-layout-spacer"></div>    
+                         <i class="mdl-color-text--blue-grey-200 material-icons md-48" role="presentation" style="font-size: 48px;align-self: center;">account_circle</i><span style="font-size: 16px;align-self: center;">tfatykhov@gmail.com</span>
+                    </header>
+              </md-toolbar>
+                <div  class="turbop-navigation mdl-color--blue-grey-200">
+                   <md-button ng-repeat-start="item in vm.menuItems" layout="row" layout-align="start center" 
+                             class="capitalize tp-navigation__link" ng-click="vm.selectItem(item)"
+                             ui-sref-active="md-warn md-hue2" ui-sref="{{item.sref}}">
+                     <!-- <div hide-sm hide-sm class="md-tile-content"> -->
+                          <i  class="material-icons md-36" style="font-size: 36px;align-self: center;">{{item.icon}}</i>
+                     <!-- </div> -->
+                    <!--  <div class="md-tile-content"> -->
+                          {{item.name}}
+                    <!--  </div> -->
+                  </md-button> 
+                <md-divider ng-repeat-end></md-divider>
+				<div layout="row" style="position: fixed; left:0; bottom: 0;" layout-align="start center"><i class="material-icons" style="font-size: 12px;">copyright</i><span style="font-size: 12px;" >&nbsp;2016 Tim Fatykhov.&nbsp;</span><a href="https://github.com/tfatykhov/WinkRedNode" target="_blank">WinkRedNode</a></div>                   
+                </div>                                       
+            </md-sidenav>
+            <div layout="column" flex>
+            <md-toolbar layout="row"  layout-align="start center">
+                 <span class="mdl-layout-title" style="padding: 15px;">{{vm.title}}</span>
+                <div class="mdl-layout-spacer"></div>
+                <md-button hide-sm class="toolbar-button" aria-label="Help" ng-click="vm.showHelp($event)">
+                    <md-icon class="material-icons">help</md-icon>
+                </md-button>
+                <md-button hide-gt-md ng-click="vm.toggleItemsList()" aria-label="Menu">
+                    <md-icon class="material-icons">menu</md-icon>
+                </md-button>
+            </md-toolbar>
+
+            <md-content layout="column"  flex class="page-content">
+                <div ui-view></div>
+            </md-content>
+            </div>
+        </div>
+        
+     	<script type="text/ng-template" id="flow-image.html">
+			<md-card ng-controller="UploadController" ng-model="model[options.key]" style="width: 300px;background-color: gainsboro;" flow-init
+			  flow-name="pics.flow"
+		      flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
+		      flow-files-submitted="uploadme($flow,'{{options.templateOptions.path}}')"
+			  flow-complete="saveme($flow,'{{options.templateOptions.path}}')">
+				<md-card-content>
+				<div layout="column" layout-align="center center">
+				<h5>{{options.templateOptions.label}}</h5>
+				<md-button aria-label="property photo" type="button" name="{{name}}" id="{{id}}" layout="column" type="file" flow-btn flow-attrs="{accept :'image/*',capture:'camera'}">
+					<div class="tp-img-preview" ng-hide="$flow.files.length">
+						<img  class="tp-img-preview" ng-src="{{getImage(options.templateOptions.path)}}" />
+					</div>
+					<div class="tp-img-preview" ng-show="$flow.files.length">
+						<img class="tp-img-preview" flow-img="$flow.files[0]" />
+					</div>		
+				</md-button>
+				<md-progress-linear ng-show="$flow.files.length" ng-class="($flow.files[0].progress()<1 ? 'md-warn' : 'md-success')" md-mode="determinate" value="{{pics.flow.files[0].progress()*100 || 0}}"></md-progress-linear>
+				</div>
+				</md-card-content>
+			</md-card>
+		</script> 
     </body>
     <!-- Application Dependencies -->
+    <script src="node_modules/api-check/dist/api-check.min.js"></script>
+    <script>
+        apiCheck.globalConfig.disabled= true;
+    </script>
     <script src="node_modules/angular/angular.min.js"></script>
     <script src="node_modules/angular-resource/angular-resource.min.js"></script>
+    <script src="node_modules/angular-route/angular-route.min.js"></script> 
+    <script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="node_modules/angular-animate/angular-animate.min.js"></script>
     <script src="node_modules/angular-aria/angular-aria.min.js"></script>    
     <script src="node_modules/angular-material/angular-material.min.js"></script>    
+    <script src="node_modules/angular-formly/dist/formly.min.js"></script>
     <script src="node_modules/angular-messages/angular-messages.min.js"></script>
-    <script src="node_modules/material-design-lite/material.min.js"></script>  
-    <script src="addons/ngstorage/ngStorage.min.js"></script>       
-    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyBscuO_7CupdIdn3xIT7fnCh7clEvgeiqE&libraries=places,geometry"></script>    
-    <script src="node_modules/ngmap/build/scripts/ng-map.min.js"></script>
-	<script src="addons/markerclusterer/src/markerwithlabel.js"></script>
-	<script src="addons/markerclusterer/src/markerclusterer_compiled.js"></script>      
+    <script src="node_modules/angular-formly-material/dist/formly-material.min.js"></script>
+    <script src="node_modules/material-design-lite/material.min.js"></script>
+    <script src="node_modules/ng-flow/dist/ng-flow-standalone.min.js"></script>    
+    <script src="node_modules/ngstorage/ngStorage.min.js"></script>        
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDW37r8_c9wC_s0iptzekWUvahAU07nl-U&libraries=places"></script>
+    <script src="node_modules/ngmap/ng-map.min.js"></script>	  
     <!-- Application Scripts -->
     <script src="app.js"></script>
-    <script src="scripts/gmaps_extenders.js"></script>
-    <script src="scripts/FormatsFactory.js"></script>
-    <script src="scripts/ListingsFactory.js"></script>    
-    <script src="scripts/utils.js"></script>
-    <script src="scripts/waitController.js"></script>    
-    <script src="scripts/MainController.js"></script>      
+    <script src="scripts/MainController.js"></script>
+    <script src="scripts/UploadController.js"></script>    
+    <script src="scripts/province.js"></script>
+    <script src="scripts/ApprForm.js"></script>
+    <script src="scripts/HomeComponents.js"></script>    
+    <script src="scripts/CurrForm.js"></script>    
+   
 </html>

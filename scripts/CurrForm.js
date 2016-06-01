@@ -4,7 +4,7 @@
     'use strict';
 
     angular
-    .module('formlyApp')
+    .module('WnrUIApp')
     .factory('CurrForm', CurrForm);
     
     
