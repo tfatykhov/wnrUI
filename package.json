@@ -22,7 +22,7 @@
 		"angular-formly" : ">0.0.x",
 		"angular-formly-material" : ">0.0.x",
 		"ngstorage" : ">0.0.x",
-		"ng
+		"angular-websocket" : ">0.0.x",
 		"ngmap" : ">0.0.x",		
 		"material-design-lite"  : ">0.0.x"
     },
