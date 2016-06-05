@@ -1,0 +1,18 @@
+<md-content ng-cloack flex-offset-gt-xs=5 flex layout-padding  layout-xs="column" layout="row" layout-wrap layout-align="start center">
+    <md-card layout="column"  ng-repeat="c in vm.HomeComponents" md-theme="dark-blue-grey" md-theme-watch style="width: 250px;">
+        <md-card-title>
+          <md-card-title-text layout-align="space-between center">
+            <span class="md-headline">{{c.label}}</span>
+            <span class="md-subhead" style="font-size: 18px;font-weight: 500;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">{{c.value}}</span>
+          </md-card-title-text>
+          <md-card-title-media>
+              <div class="md-media-sm card-media" style="font-size: 5.3em;text-align: end; padding-right: 10px;padding-top: 5px;"><span><i ng-class="c.icon" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}"></i></span></div>
+          </md-card-title-media>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button class="md-primary">
+                Details
+            </md-button>
+        </md-card-actions>       
+    </md-card>
+</md-content> 

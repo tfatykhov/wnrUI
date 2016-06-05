@@ -1,0 +1,27 @@
+<md-dialog aria-label="Login" ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Please Login</h2>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+          <md-input-container>
+            <label>User Id</label>
+            <input ng-model="uid">
+          </md-input-container>
+          <md-input-container>
+            <label>Password</label>
+            <input ng-model="pwd" type="password">
+          </md-input-container>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="submit()" style="margin-right:20px;">
+        Login
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

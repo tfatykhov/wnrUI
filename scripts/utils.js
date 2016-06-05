@@ -1,5 +1,5 @@
 (function(){
-	angular.module('HomeReadyApp').service('utils', utils);
+	angular.module('WnrUIApp').service('utils', utils);
     utils.$inject = ['$mdDialog', '$rootScope'];
     function utils($mdDialog,  $rootScope){ 
      
@@ -7,7 +7,7 @@
        hideWait: hideWait,
        showWait: showWait
      }
-     
+            
      function hideWait(){
           setTimeout(function(){
                    $rootScope.$emit("hide_wait"); 
@@ -30,6 +30,5 @@
                 
               });
        }
-  
     }
 })();

@@ -1,0 +1,17 @@
+<md-content ng-cloack flex layout-padding layout-fill layout-xs="column" layout="column" layout-wrap layout-align="center center">
+    <form> 
+        <md-content class="md-no-momentum" layout-fill layout-align="center center">
+            <md-input-container class="md-icon-float md-block">
+                <md-icon class="material-icons">account_circle</md-icon>
+                <input class="login_form" ng-model="vm.uid" type="text" ng-required="true" aria-label="user">
+            </md-input-container>
+            <md-input-container class="md-icon-float md-block">
+                <md-icon class="material-icons">vpn_key</md-icon>                
+                <input class="login_form" ng-model="vm.pwd" type="password" ng-required="true" aria-label="password">
+            </md-input-container>
+            <md-button  class="md-raised" caria-label="Submit" ng-click="vm.login(vm.uid,vm.pwd)">
+                Login
+            </md-button>            
+        </md-content>
+    </form>
+</md-content>

@@ -1,5 +1,5 @@
 (function () {
-    angular.module('HomeReadyApp').controller('waitCtrl', waitCtrl);
+    angular.module('WnrUIApp').controller('waitCtrl', waitCtrl);
     waitCtrl.$inject = ['$mdDialog', '$rootScope'];
 
     function waitCtrl($mdDialog, $rootScope) {

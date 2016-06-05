@@ -24,7 +24,8 @@
 		"ngstorage" : ">0.0.x",
 		"angular-websocket" : ">0.0.x",
 		"ngmap" : ">0.0.x",		
-		"material-design-lite"  : ">0.0.x"
+		"material-design-lite"  : ">0.0.x",
+		"api-check" : ">0.0.x"
     },
     "node-red"     : {
         "nodes": {

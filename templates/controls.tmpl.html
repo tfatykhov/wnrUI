@@ -1,12 +1,12 @@
-<md-content ng-cloack flex flex-offset-gt-xs=5 layout-xs="column" layout="row" layout-wrap layout-align="start center">
-    <md-card layout="column"  ng-repeat="c in vm.cameras" md-theme="dark-blue-grey" md-theme-watch>
+<md-content ng-cloack flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+    <md-card layout="column" ng-repeat="c in vm.cameras" md-theme="dark-blue-grey" md-theme-watch>
         <md-card-title>
             <md-card-title-text>
             <span class="md-headline">{{c.name}}</span>
             </md-card-title-text>
         </md-card-title>
-        <md-card-content layout="row" layout-xs="column"  layout-align="start center">
-            <div style="width:320px;height:240px;display:block;">
+        <md-card-content layout="row" layout-align="center center">
+            <div style="height:240px;display:block;">
                 <img ng-src="{{c.url}}" fallback-src="images/house.jpg" class="md-card-image" style="max-height:240px;max-width:auto;self-align:center;" alt="Washed Out"><br>
             </div>
     </md-card-content>
