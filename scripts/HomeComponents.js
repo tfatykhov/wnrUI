@@ -79,7 +79,7 @@
                 
                 function refreshCamImgUrl(){
                    $interval(function(){
-                       if (HomeComponents.cameras.length>0 && currState=='cams'){
+                       if ('cameras' in HomeComponents && HomeComponents.cameras.length>0 && currState=='cams'){
                            angular.forEach(HomeComponents.cameras,function(value,key){
                                if(typeof HomeComponents.cameras[key].origUrl==='undefined') HomeComponents.cameras[key].origUrl=value.url;
                                HomeComponents.cameras[key].url=HomeComponents.cameras[key].origUrl + (HomeComponents.cameras[key].origUrl.indexOf("?") == -1 ? "?" : "&") + Date.now();

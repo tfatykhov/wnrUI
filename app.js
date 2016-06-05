@@ -8,26 +8,28 @@
             var wsUri = "ws:";
             var loc = window.location;
             if (loc.protocol === "https:") { wsUri = "wss:"; }
-            wsUri += "//" + loc.host + "/ws/winkStat";            
-            var dataStream = $websocket (wsUri, null, {reconnectIfNotNormalClose: true});
-            //dataStream.ReconnectIfNotNormalClose=true;
+            wsUri += "//" + loc.host + "/ws/winkStat"; 
+            var collection=[];            
+            var connect = function(){
+                var dataStream = $websocket (wsUri, null, {reconnectIfNotNormalClose: true});
+                //dataStream.ReconnectIfNotNormalClose=true;
 
-            var collection=[];
-            dataStream.onMessage(function(message){
-                collection.splice(0,1,JSON.parse(message.data));
-                $rootScope.$broadcast('WS: incoming');
-                
-            });
-/*            dataStream.onClose(function(){
-                $timeout(function(){console.log('ws closed.. reconnecting');dataStream = $websocket (wsUri)},3000);
-            });
+                dataStream.onMessage(function(message){
+                    collection.splice(0,1,JSON.parse(message.data));
+                    $rootScope.$broadcast('WS: incoming');
 
-            dataStream.onError(function(){
-                $timeout(function(){console.log('ws error.. reconnecting');dataStream = $websocket (wsUri)},3000);
-            });            
-            */
-            
+                });
+    /*            dataStream.onClose(function(){
+                    $timeout(function(){console.log('ws closed.. reconnecting');dataStream = $websocket (wsUri)},3000);
+                });
+
+                dataStream.onError(function(){
+                    $timeout(function(){console.log('ws error.. reconnecting');dataStream = $websocket (wsUri)},3000);
+                });            
+                */
+            }            
             var methods = {
+                connect : connect,
                 collection : collection,
                  get: function() {
                     dataStream.send(JSON.stringify({ action: 'get' }));

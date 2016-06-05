@@ -4,7 +4,7 @@
     'use strict';
 
     angular.module('WnrUIApp')
-        .controller('MainController', ['$scope', '$rootScope', '$http', '$timeout', '$mdSidenav', '$localStorage', '$mdDialog', '$mdMedia', '$state',  'HomeComponents',  'NgMap','WsComms','utils', MainController])
+        .controller('MainController', ['$scope', '$rootScope', '$http', '$timeout', '$mdSidenav', '$localStorage', '$mdDialog', '$mdMedia', '$state',  'HomeComponents',  'NgMap','WsComms', 'UserAuth','utils', MainController])
         .directive('fallbackSrc',fallbackSrc);
 
         function fallbackSrc(){
@@ -18,7 +18,7 @@
             return fallbackSrc;
         }    
     
-function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localStorage, $mdDialog, $mdMedia,  $state, HomeComponents, NgMap,WsComms,utils) {
+function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localStorage, $mdDialog, $mdMedia,  $state, HomeComponents, NgMap,WsComms,UserAuth,utils) {
 
     var vm = this;
     var originatorEv;
@@ -107,17 +107,22 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     }
     
     function login(user,pass){
-        if (user=='tfatykhov@gmail.com') {
-            $rootScope.currentUser=user;
-            HomeComponents.getSummary()
-            .then(function(){
-                vm.HomeComponents=HomeComponents.getHomeComponents();
-                vm.HomePosition=HomeComponents.getHomePosition();
-                vm.HomeWeather=HomeComponents.getWeather();
-            });
-            HomeComponents.refreshCamImgUrl();             
-            $state.go('summary');
-        }
+        UserAuth.login(user,pass)
+            .then(function(response){
+            console.log(response);
+            if (response.status==200) {
+                $rootScope.currentUser=user;
+                WsComms.connect();
+                HomeComponents.getSummary()
+                .then(function(){
+                    vm.HomeComponents=HomeComponents.getHomeComponents();
+                    vm.HomePosition=HomeComponents.getHomePosition();
+                    vm.HomeWeather=HomeComponents.getWeather();
+                });
+                HomeComponents.refreshCamImgUrl();             
+                $state.go('summary');
+            }
+        });            
     }
     
 // pubSub functions start
