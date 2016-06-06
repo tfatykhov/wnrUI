@@ -112,6 +112,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
             console.log(response);
             if (response.status==200) {
                 $rootScope.currentUser=user;
+                vm.user=user;
                 WsComms.connect();
                 HomeComponents.getSummary()
                 .then(function(){
