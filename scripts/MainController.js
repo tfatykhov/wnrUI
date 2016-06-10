@@ -80,7 +80,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
         });*/
 //        $scope.vm.propertyList=getLocalPropList($scope.storage);      
     };
-    $scope.init();
+//    $scope.init();
     
     $scope.getSummary = function (){
         HomeComponents.getSummary()
@@ -116,6 +116,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
                 WsComms.connect();
                 HomeComponents.getSummary()
                 .then(function(){
+                    $scope.init();
                     vm.HomeComponents=HomeComponents.getHomeComponents();
                     vm.HomePosition=HomeComponents.getHomePosition();
                     vm.HomeWeather=HomeComponents.getWeather();
@@ -140,6 +141,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
       
     $scope.$on('WS: incoming',function(msg){
         if ('home_components' in $scope.wsComms.collection[0]) $scope.getSummary();
+   //     if ('weather') in $scope.wsComms.collection[0] $scope.get
 /*        console.log('incoming WebSocket Message');
         console.log($scope.wsComms.collection[0]);*/
     });

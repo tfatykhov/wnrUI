@@ -1,0 +1,26 @@
+<md-dialog aria-label="Picture gallery"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Property pictures</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+			<md-icon class="material-icons" aria-label="close">highlight_off</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+		<div class='md-padding' layout="row" layout-wrap>
+			<md-card style="width: 400px;" ng-repeat="pic in images">
+  	     	     <img ng-src="{{pic}}" class="md-card-image" alt="prop pic">
+<!--  			<div ng-style="{'background-image':'url('+imgURL+')'}"></div> -->				     	     
+			</md-card>       	     
+		</div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+       <md-button ng-click="cancel()" style="margin-right:20px;">
+        Close
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

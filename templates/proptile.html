@@ -1,0 +1,48 @@
+ 
+<md-content flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+	<md-card ng-repeat="p in vm.propertyList" style="width: 300px;">        
+	    <md-card-title>
+	        <md-card-title-text>
+	            <span class="md-tp-headline">{{p.str_addr}}</span>
+	            <span class="md-tp-subhead">{{p.city+", "+p.state+", "+p.zip}}</span>
+	            <div>Condition: <span class="tp-circle-txt">{{p.cond}}</span></div>
+	            <div>Quality: <span class="tp-circle-txt">{{p.qlty}}</span></div>
+	        </md-card-title-text>
+	        <md-card-title-media>
+	            <div class="md-media-md card-media">
+	                <img ng-src="{{'/tp/image/'+p.apprId+vm.frontImage}}" fallback-src="images/house.jpg" class="md-card-image" alt="Washed Out"><br>
+	            </div>
+	        </md-card-title-media>
+	    </md-card-title>
+	     <md-card-content>
+	         <img border="0" 
+	    ng-src="//maps.googleapis.com/maps/api/staticmap?center={{p.lat}},{{p.lng}}&zoom=14&size=270x150&scale=1&markers=color:blue|label:*|{{p.lat}},{{p.lng}}&key=AIzaSyDW37r8_c9wC_s0iptzekWUvahAU07nl-U" alt="..">
+		<md-progress-linear ng-show="p.progress" ng-class="(p.progress<100 ? 'md-accent  md-hue-2' : 'md-success')" md-mode="determinate" value="{{p.progress || 0}}"></md-progress-linear>	    
+	    </md-card-content>
+	    <md-card-actions layout="row" layout-align="end center">
+	        <md-button class="md-icon-button md-primary  md-hue-2" aria-label="Pictures" ng-click="vm.showGallery($event,p.apprId)">
+					<md-tooltip>Picture Gallery</md-tooltip>	        
+	                <md-icon class="material-icons">camera_roll</md-icon>
+	        </md-button>	    
+	        <md-button class="md-icon-button md-primary  md-hue-2" aria-label="Edit"  ui-sref-active="md-warn" ui-sref="editFrm({apprId: p.apprId})">
+	            <md-tooltip>Edit form</md-tooltip>
+	            <md-icon class="material-icons">mode_edit</md-icon>
+	        </md-button>
+	        <md-button class="md-icon-button md-primary  md-hue-2" aria-label="Directions" ng-click="vm.showAddrPrompt($event)">
+	        		<md-tooltip>Start navigation</md-tooltip>
+	                <md-icon class="material-icons">navigation</md-icon>
+	        </md-button>
+	    </md-card-actions>
+	  </md-card>
+<!--	<md-card style="width: 300px;">
+	
+	<md-card-content>
+	<div layout="column" layout-align="center center">
+	<md-button layout="column" aria-label="Add New" ng-click="vm.title='Add new';" ui-sref="addNew">
+		<i  class="material-icons md-64" style="font-size: 64px;align-self: center;">add_circle</i>
+		<span style="font-size:25px;align-self: center;"> Add new property</span>		
+	</md-button>
+	</div>
+	</md-card-content>
+	</md-card>	-->
+</md-content>
