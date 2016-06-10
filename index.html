@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="description" content="WNR UI 2.0">
+        <meta name="description" content="NewAlpha Mobile">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
         <title>WNR UI 2.0</title>    
         <!-- Add to homescreen for Chrome on Android -->
@@ -11,7 +11,7 @@
           <!-- Add to homescreen for Safari on iOS -->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="apple-mobile-web-app-title" content="WNR UI 2.0">
+        <meta name="apple-mobile-web-app-title" content="TurboPraise 2.0">
         <!-- Icons -->
         <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
@@ -38,6 +38,7 @@
         <link rel="stylesheet" href="css/weather-icons.min.css">
         <link rel="stylesheet" href="css/weather-icons-wind.min.css">
         <link rel="stylesheet" type="text/css" href="css/c-ico.css">
+        <link rel="stylesheet" type="text/css" href="addons/angular-clock/angular-clock.css">        
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">        
         <link rel="stylesheet" href="css/style.css">  
     </head>
@@ -48,8 +49,11 @@
               <md-toolbar  class="md-hue-2 md-whiteframe-z2">
                     <header class="turbop-drawer-header mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
                          <span class="mdl-layout-title" style="letter-spacing: .03em;font-weight: 800;align-self: center;">Wink Node Red UI 2.0</span>
+                          <div style="height: 100px;width: 100px;align-self: center;padding-top: 5px;">
+                            <ds-widget-clock show-analog theme="blue-light"></ds-widget-clock>
+                          </div>
                          <div class="mdl-layout-spacer"></div>    
-                         <i class="mdl-color-text--blue-grey-200 material-icons md-48" role="presentation" style="font-size: 48px;align-self: center;">account_circle</i><span style="font-size: 16px;align-self: center;">{{vm.user}}</span>
+<!--                         <i class="mdl-color-text--blue-grey-200 material-icons md-48" role="presentation" style="font-size: 48px;align-self: center;">account_circle</i><span style="font-size: 16px;align-self: center;">{{vm.user}}</span>-->
                     </header>
               </md-toolbar>
                 <div  class="turbop-navigation mdl-color--blue-grey-200">
@@ -74,7 +78,11 @@
                 </md-button>                
                  <span class="mdl-layout-title" style="padding: 15px;">{{vm.title}}</span>
                 <div class="mdl-layout-spacer"></div>
-                <md-button hide-sm class="toolbar-button" aria-label="Help" ng-click="vm.showHelp($event)">
+                <span style="font-size: 12px;font-weight: 200;padding-right: 5px;">
+                  <md-switch class="md-primary md-hue-2" hide show-gt-xs ng-model="vm.Config.VacaLights" aria-label="Switch 1">
+                   Vacation Mode
+                  </md-switch></span>                
+                <md-button hide show-gt-sm class="toolbar-button" aria-label="Help" ng-click="vm.showHelp($event)">
                     <md-icon class="material-icons">help</md-icon>
                 </md-button>
             </md-toolbar>
@@ -83,30 +91,7 @@
                 <div ui-view></div>
             </md-content>
             </div>
-        </div>
-        
-     	<script type="text/ng-template" id="flow-image.html">
-			<md-card ng-controller="UploadController" ng-model="model[options.key]" style="width: 300px;background-color: gainsboro;" flow-init
-			  flow-name="pics.flow"
-		      flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]"
-		      flow-files-submitted="uploadme($flow,'{{options.templateOptions.path}}')"
-			  flow-complete="saveme($flow,'{{options.templateOptions.path}}')">
-				<md-card-content>
-				<div layout="column" layout-align="center center">
-				<h5>{{options.templateOptions.label}}</h5>
-				<md-button aria-label="property photo" type="button" name="{{name}}" id="{{id}}" layout="column" type="file" flow-btn flow-attrs="{accept :'image/*',capture:'camera'}">
-					<div class="tp-img-preview" ng-hide="$flow.files.length">
-						<img  class="tp-img-preview" ng-src="{{getImage(options.templateOptions.path)}}" />
-					</div>
-					<div class="tp-img-preview" ng-show="$flow.files.length">
-						<img class="tp-img-preview" flow-img="$flow.files[0]" />
-					</div>		
-				</md-button>
-				<md-progress-linear ng-show="$flow.files.length" ng-class="($flow.files[0].progress()<1 ? 'md-warn' : 'md-success')" md-mode="determinate" value="{{pics.flow.files[0].progress()*100 || 0}}"></md-progress-linear>
-				</div>
-				</md-card-content>
-			</md-card>
-		</script> 
+        </div>        
     </body>
     <!-- Application Dependencies -->
     <script src="node_modules/api-check/dist/api-check.min.js"></script>
@@ -126,7 +111,8 @@
     <script src="node_modules/ngstorage/ngStorage.min.js"></script>        
     <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyDW37r8_c9wC_s0iptzekWUvahAU07nl-U&libraries=places"></script>
     <script src="node_modules/ngmap/build/scripts/ng-map.min.js"></script>	  
-    <script src="node_modules/angular-websocket/dist/angular-websocket.min.js"></script>    
+    <script src="node_modules/angular-websocket/dist/angular-websocket.min.js"></script>
+    <script src="addons/angular-clock/angular-clock.min.js"></script>
     <!-- Application Scripts -->
     <script src="app.js"></script>  
     <script src="scripts/MainController.js"></script>

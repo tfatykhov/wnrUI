@@ -40,7 +40,7 @@
 }
 .widget-clock.blue-light .second,
 .widget-clock.blue-light .second-counterweight {
-  stroke: rgb(234, 31, 54);
+  stroke: rgb(255,87,34);
   stroke-width: 0.5;
 }
 .widget-clock.blue-light .second-counterweight {
