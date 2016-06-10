@@ -3,12 +3,11 @@
         <md-card-title>
           <md-card-title-text layout-align="space-between center">
             <span class="md-headline">Weather</span>
-            <span class="md-subhead" style="font-size: 18px;font-weight: 500;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">{{vm.HomeWeather.currently.dual_temp}}</span>
-<!--            <span class="md-subhead" style="font-size: 18px;font-weight: 500;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">{{vm.HomeWeather.currently.humidity_pct}}</span> -->             
+            <span class="md-subhead" style="font-size: 18px;font-weight: 500;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">{{vm.HomeWeather.currently.dual_temp}}</span>            
           </md-card-title-text>
           <md-card-title-media>
               <div class="md-media-sm card-media" style="font-size: 5.3em;text-align: end;padding-top: 5px;">
-                  <span><i ng-class="'wi wi-large '+vm.HomeWeather.currently.web_icon" style="font-size: 0.9em;"></i></span></div>
+                  <span><i ng-class="'wi wi-large '+vm.HomeWeather.currently.web_icon" style="font-size: 0.9em;"></i></span>
               </div>
           </md-card-title-media>
         </md-card-title>
