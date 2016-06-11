@@ -3,7 +3,7 @@
 
     'use strict';
 
-    var WnrUIApp = angular.module('WnrUIApp', ['ngWebSocket','ui.router', 'ngMaterial','ngMap', 'ngStorage', 'ngMessages', 'formlyMaterial', 'formly'])
+    var WnrUIApp = angular.module('WnrUIApp', ['ngWebSocket','ui.router', 'ngMaterial','ngMap', 'ngStorage', 'ngMessages', 'formlyMaterial', 'formly',  'ds.clock'])
         .factory('WsComms',function($rootScope,$websocket,$timeout){
             var wsUri = "ws:";
             var loc = window.location;
