@@ -94,12 +94,66 @@
               title: 'Cameras'
             }
           })      
-           .state('search', {
+           .state('family', {
             url: '/search',          
-            templateUrl: 'templates/addrgeo.tmpl.html', 
+            templateUrl: 'templates/myfamily.tmpl.html', 
+            controller : function($scope,HomeComponents){
+                //$scope.getCams();
+          $scope.HomePosition = new google.maps.LatLng($scope.vm.HomePosition.lat,$scope.vm.HomePosition.lng);     
+
+           $scope.mapReady = function(map){	
+                $scope.vm.map = map;
+                $scope.vm.map.setCenter($scope.HomePosition);
+                $scope.vm.map.setZoom(15);
+                $scope.HomeMarker = new google.maps.Marker({
+                    map: $scope.vm.map,
+                    position:$scope.HomePosition,
+                    label:{
+                        text:'H',
+                        fontSize: '12px'
+                    },
+                    icon:{
+                        labelOrigin: new google.maps.Point(16,12),
+                        url: 'images/markers/map-marker-2-32_blue.png'
+                    }
+                });               
+                HomeComponents.getFamily()
+                .then(function(){
+                    $scope.geo_locations=HomeComponents.getFamilyList();
+                    $scope.home_radius=HomeComponents.getHomeRadius();
+                    $scope.homeCircle = new google.maps.Circle({
+                    strokeColor: '#99e6ff',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: ' #99e6ff',
+                    fillOpacity: 0.25,
+                    map:  $scope.vm.map,
+                    center: $scope.HomePosition,
+                    radius: parseInt($scope.home_radius)
+                    });                    
+                    angular.forEach( $scope.geo_locations,function(g,key){
+                        var mPosition = new google.maps.LatLng(g.lat,g.lng);
+                        var marker = new google.maps.Marker({
+                            map: $scope.vm.map,
+                            position: mPosition,
+                            label:{
+                            text:g.name,
+                            fontSize: '12px'
+                        },
+                        icon:{
+                            labelOrigin: new google.maps.Point(16,12),
+                            url: 'images/markers/map-marker-2-32_purple.png'
+                        }                        
+                        });
+                    });
+                });
+            }
+                               
+             $scope.vm.title = 'My Family';
+            },
             data: {
               requireLogin : true,                
-              title: 'Search'
+              title: 'My Family'
             }
           });
          $urlRouterProvider.otherwise('/login');

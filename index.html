@@ -79,7 +79,7 @@
                  <span class="mdl-layout-title" style="padding: 15px;">{{vm.title}}</span>
                 <div class="mdl-layout-spacer"></div>
                 <span style="font-size: 12px;font-weight: 200;padding-right: 5px;">
-                  <md-switch class="md-primary md-hue-2" hide show-gt-xs ng-model="vm.Config.VacaLights" aria-label="Switch 1">
+                  <md-switch class="md-primary md-hue-2" hide show-gt-xs ng-true-value="'on'" ng-false-value="'off'" ng-model="vm.VacationMode" aria-label="Switch 1">
                    Vacation Mode
                   </md-switch></span>                
                 <md-button hide show-gt-sm class="toolbar-button" aria-label="Help" ng-click="vm.showHelp($event)">
@@ -88,7 +88,7 @@
             </md-toolbar>
 
             <md-content layout="column"  flex class="page-content">
-                <div ui-view></div>
+                <div layout-fill ui-view></div>
             </md-content>
             </div>
         </div>        

@@ -14,6 +14,17 @@
                    currState = state;
                 };
                 
+                function round(value, precision) {
+                    var multiplier = Math.pow(10, precision || 0);
+                    return Math.round(value * multiplier) / multiplier;
+                }
+                
+                function getUvIndex(val){
+                    var value;
+                    value=parseInt(val);
+                    return (value <=2 ? 'Minimal' : value <=4 ? 'Low' : value<=6 ? 'Moderate' : 'High');
+                }
+                
                 function getState(){ return currState}
                 
                 function getSummary(){
@@ -56,7 +67,6 @@
                             }
                                  ,function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
                 };
-                
                 function getCamList(){
                     return HomeComponents.cameras ||  [];
                 };
@@ -64,8 +74,39 @@
                 function getLightList(){
                     return HomeComponents.lights || [];
                 }
+
+                function getFamily(){
+                    var req = {
+                    		cache : false,
+                            method: 'GET',
+                            url: '/freeboard/MyFamilyjson',
+                            headers :{
+                                'Cache-Control': 'no-cache'
+                            }
+                        }
+                       return $http(req)
+                           .then(function(response){console.log('getFamily was executed from '+req.url);HomeComponents.family=response.data;
+                            }
+                                 ,function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
+                };                
+                
+                function getFamilyList(){
+                    return HomeComponents.family.geo_locations ||  [];
+                }
+                
+                function getHomeRadius(){
+                    return HomeComponents.family.home_radius || 100;
+                }
                 
                 function getWeather(){
+                    if ('weather' in HomeComponents.homeData){
+                        if('Bloomsky' in HomeComponents.homeData.weather){
+                            var b = HomeComponents.homeData.weather.Bloomsky;
+                            HomeComponents.homeData.weather.currently.dual_temp= round(b.TemperatureC,1)+'C / '+b.TemperatureF+'F';
+                            HomeComponents.homeData.weather.currently.humidity_pct=b.Humidity+'%';
+                            HomeComponents.homeData.weather.currently.uvindex=getUvIndex(b.UVIndex);
+                        }
+                    }
                     return ('weather' in HomeComponents.homeData ? HomeComponents.homeData.weather : {});
                 }
                 
@@ -75,6 +116,12 @@
                 
                 function getHomeComponents(){
                     return ('home_components' in HomeComponents.homeData ? HomeComponents.homeData.home_components : []);
+                }
+                function setHC(idx,comp){
+                    HomeComponents.homeData.home_components[idx]=comp;
+                }
+                function setWeather(wtr){
+                    HomeComponents.homeData.weather=wtr;
                 }
                 
                 function refreshCamImgUrl(){
@@ -89,6 +136,8 @@
                    },30000); 
                 };
                 var methods= {
+                    setHomeComponents : setHC,
+                    setWeather : setWeather,
                     getSummary : getSummary,
                     getCameras : getCameras,
                     getLights : getLights,
@@ -99,6 +148,9 @@
                     getWeather : getWeather,
                     setState : setState,
                     getState : getState,
+                    getFamily : getFamily,
+                    getFamilyList : getFamilyList,
+                    getHomeRadius : getHomeRadius,
                     refreshCamImgUrl : refreshCamImgUrl
                 };                
                 return methods;

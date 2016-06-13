@@ -1,11 +1,12 @@
 <md-content ng-cloack flex-offset-gt-xs=5 flex layout-padding  layout-xs="column" layout="row" layout-wrap layout-align="start center">
-        <md-card layout="column"  md-theme="dark-blue-grey" md-theme-watch style="width: 250px;">
+        <md-card layout="column"  md-theme="dark-blue-grey" md-theme-watch style="width: 250px;height: 185px;">
         <md-card-title>
           <md-card-title-text layout-align="space-around stretch">
 <!--            <span class="md-subhead">Weather</span>-->
             <span class="md-subhead" style="font-size: 16px;font-weight: 400;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">{{vm.HomeWeather.currently.dual_temp}}</span>
             <span class="md-subhead" style="font-size: 14px;font-weight: 300;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">Humidity: {{vm.HomeWeather.currently.humidity_pct}}</span> 
-            <span class="md-subhead" style="font-size: 14px;font-weight: 300;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">Cloud Cover: {{vm.HomeWeather.currently.clouds_pct}}</span>               
+            <span class="md-subhead" style="font-size: 14px;font-weight: 300;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">Cloud Cover: {{vm.HomeWeather.currently.clouds_pct}}</span>  
+            <span ng-show="vm.HomeWeather.currently.uvindex" class="md-subhead" style="font-size: 14px;font-weight: 300;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">UV Index: {{vm.HomeWeather.currently.uvindex}}</span>                
           </md-card-title-text>
           <md-card-title-media>
               <div class="md-media-sm card-media" style="font-size: 5.3em;text-align: end;padding-top: 5px;">
@@ -19,7 +20,7 @@
             </md-button>
         </md-card-actions>       
     </md-card>
-    <md-card layout="column"  ng-repeat="c in vm.HomeComponents" md-theme="dark-blue-grey" md-theme-watch style="width: 250px;">
+    <md-card layout="column"  ng-repeat="c in vm.HomeComponents" md-theme="dark-blue-grey" md-theme-watch style="width: 250px;height: 185px;">
         <md-card-title>
           <md-card-title-text layout="column" layout-align="center center">
 <!--            <span class="md-headline">{{c.label}}</span>-->

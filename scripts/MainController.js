@@ -140,7 +140,27 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
      });
       
     $scope.$on('WS: incoming',function(msg){
-        if ('home_components' in $scope.wsComms.collection[0]) $scope.getSummary();
+        //if ('home_components' in $scope.wsComms.collection[0]) $scope.getSummary();
+        if ('home_components' in $scope.wsComms.collection[0]) {
+            var c = $scope.wsComms.collection[0].home_components;
+            angular.forEach(c,function(value,key){
+                var idx = vm.HomeComponents.findIndex(function(element){
+                    return (element.type==value.type)
+                })
+                if (idx!=-1) {
+                    vm.HomeComponents[idx]=value;
+                    HomeComponents.setHomeComponents(idx,value);
+                }
+            })
+        } 
+        if('weather' in $scope.wsComms.collection[0]){
+            HomeComponents.setWeather($scope.wsComms.collection[0].weather);
+            vm.HomeWeather=HomeComponents.getWeather();
+        }
+        if ('varName' in $scope.wsComms.collection[0]){
+            var v= $scope.wsComms.collection[0];
+            vm[v.varName]=v.varVal;
+        }
    //     if ('weather') in $scope.wsComms.collection[0] $scope.get
 /*        console.log('incoming WebSocket Message');
         console.log($scope.wsComms.collection[0]);*/
