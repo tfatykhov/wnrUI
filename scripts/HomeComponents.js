@@ -10,9 +10,23 @@
                 HomeComponents.cameras=[];
                 HomeComponents.lights=[];
                 HomeComponents.homeData={};
+                HomeComponents.geommarkers=[];
+                
                 function setState(state){
                    currState = state;
-                };
+                }
+                
+                function clearGeoMarkers() {
+                    HomeComponents.geommarkers=[]
+                }
+                
+                function getGeoMarkers() {
+                    return HomeComponents.geommarkers;
+                }
+                
+                function addGeoMarker(marker){
+                    HomeComponents.geommarkers.push(marker);
+                }
                 
                 function round(value, precision) {
                     var multiplier = Math.pow(10, precision || 0);
@@ -151,6 +165,9 @@
                     getFamily : getFamily,
                     getFamilyList : getFamilyList,
                     getHomeRadius : getHomeRadius,
+                    clearGeoMarkers : clearGeoMarkers,
+                    getGeoMarkers : getGeoMarkers,
+                    addGeoMarker : addGeoMarker,
                     refreshCamImgUrl : refreshCamImgUrl
                 };                
                 return methods;

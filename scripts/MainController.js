@@ -113,10 +113,10 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
             if (response.status==200) {
                 $rootScope.currentUser=user;
                 vm.user=user;
+                $scope.init();                
                 WsComms.connect();
                 HomeComponents.getSummary()
                 .then(function(){
-                    $scope.init();
                     vm.HomeComponents=HomeComponents.getHomeComponents();
                     vm.HomePosition=HomeComponents.getHomePosition();
                     vm.HomeWeather=HomeComponents.getWeather();

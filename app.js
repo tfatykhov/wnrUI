@@ -97,14 +97,18 @@
            .state('family', {
             url: '/search',          
             templateUrl: 'templates/myfamily.tmpl.html', 
-            controller : function($scope,HomeComponents){
+            controller : function($scope,$interval,HomeComponents){
                 //$scope.getCams();
           $scope.HomePosition = new google.maps.LatLng($scope.vm.HomePosition.lat,$scope.vm.HomePosition.lng);     
-
-           $scope.mapReady = function(map){	
+           $scope.mapReady = function(map){
+               $scope.mArray=HomeComponents.getGeoMarkers();
+               angular.forEach($scope.mArray,function(value){
+                   value.setMap(null);
+               });
+                HomeComponents.clearGeoMarkers();
+                $scope.bounds = new google.maps.LatLngBounds();
                 $scope.vm.map = map;
                 $scope.vm.map.setCenter($scope.HomePosition);
-                $scope.vm.map.setZoom(15);
                 $scope.HomeMarker = new google.maps.Marker({
                     map: $scope.vm.map,
                     position:$scope.HomePosition,
@@ -116,37 +120,43 @@
                         labelOrigin: new google.maps.Point(16,12),
                         url: 'images/markers/map-marker-2-32_blue.png'
                     }
-                });               
-                HomeComponents.getFamily()
-                .then(function(){
-                    $scope.geo_locations=HomeComponents.getFamilyList();
-                    $scope.home_radius=HomeComponents.getHomeRadius();
-                    $scope.homeCircle = new google.maps.Circle({
-                    strokeColor: '#99e6ff',
-                    strokeOpacity: 0.8,
-                    strokeWeight: 2,
-                    fillColor: ' #99e6ff',
-                    fillOpacity: 0.25,
-                    map:  $scope.vm.map,
-                    center: $scope.HomePosition,
-                    radius: parseInt($scope.home_radius)
-                    });                    
-                    angular.forEach( $scope.geo_locations,function(g,key){
-                        var mPosition = new google.maps.LatLng(g.lat,g.lng);
-                        var marker = new google.maps.Marker({
-                            map: $scope.vm.map,
-                            position: mPosition,
-                            label:{
-                            text:g.name,
-                            fontSize: '12px'
-                        },
-                        icon:{
-                            labelOrigin: new google.maps.Point(16,12),
-                            url: 'images/markers/map-marker-2-32_purple.png'
-                        }                        
-                        });
-                    });
                 });
+                HomeComponents.addGeoMarker($scope.HomeMarker);
+                $scope.bounds.extend($scope.HomePosition);
+                
+                    HomeComponents.getFamily()
+                    .then(function(){
+                        $scope.geo_locations=HomeComponents.getFamilyList();
+                        $scope.home_radius=HomeComponents.getHomeRadius();
+                        $scope.homeCircle = new google.maps.Circle({
+                        strokeColor: '#99e6ff',
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: ' #99e6ff',
+                        fillOpacity: 0.25,
+                        map:  $scope.vm.map,
+                        center: $scope.HomePosition,
+                        radius: parseInt($scope.home_radius)
+                        });                    
+                        angular.forEach( $scope.geo_locations,function(g,key){
+                            var mPosition = new google.maps.LatLng(g.lat,g.lng);
+                            var marker = new google.maps.Marker({
+                                map: $scope.vm.map,
+                                position: mPosition,
+                                label:{
+                                text:g.name,
+                                fontSize: '12px'
+                            },
+                            icon:{
+                                labelOrigin: new google.maps.Point(16,12),
+                                url: 'images/markers/map-marker-2-32_purple.png'
+                            }                        
+                            });
+                            HomeComponents.addGeoMarker(marker);
+                            $scope.bounds.extend(mPosition);
+                        }); 
+                    $scope.vm.map.fitBounds($scope.bounds);                    
+                    });
             }
                                
              $scope.vm.title = 'My Family';
