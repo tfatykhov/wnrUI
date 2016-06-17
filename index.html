@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="description" content="NewAlpha Mobile">
+        <meta name="description" content="WNR UI 2.0">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
         <title>WNR UI 2.0</title>    
         <!-- Add to homescreen for Chrome on Android -->
@@ -11,7 +11,7 @@
           <!-- Add to homescreen for Safari on iOS -->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
-        <meta name="apple-mobile-web-app-title" content="TurboPraise 2.0">
+        <meta name="apple-mobile-web-app-title" content="Wink Node Red UI 2.0">
         <!-- Icons -->
         <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
@@ -73,24 +73,45 @@
             </md-sidenav>
             <div layout="column" flex>
             <md-toolbar layout="row"  layout-align="end center">
-                <md-button hide-gt-md ng-click="vm.toggleItemsList()" aria-label="Menu">
+                <md-button hide-gt-md ng-click="vm.toggleItemsList('left')" aria-label="Menu">
                     <md-icon class="material-icons">menu</md-icon>
                 </md-button>                
-                 <span class="mdl-layout-title" style="padding: 15px;">{{vm.title}}</span>
-                <div class="mdl-layout-spacer"></div>
-                <span style="font-size: 12px;font-weight: 200;padding-right: 5px;">
-                  <md-switch class="md-primary md-hue-2" hide show-gt-xs ng-true-value="'on'" ng-false-value="'off'" ng-model="vm.VacationMode" aria-label="Switch 1">
-                   Vacation Mode
-                  </md-switch></span>                
-                <md-button hide show-gt-sm class="toolbar-button" aria-label="Help" ng-click="vm.showHelp($event)">
-                    <md-icon class="material-icons">help</md-icon>
-                </md-button>
+                <span class="mdl-layout-title" style="padding: 15px;">{{vm.title}}</span>
+                    <div class="mdl-layout-spacer"></div>
+                <div layout="row" ng-show="vm.user">                
+                    <span style="font-size: 12px;font-weight: 200;padding-right: 5px;">
+                      <md-switch class="md-primary md-hue-2" hide show-gt-xs ng-true-value="'on'" ng-false-value="'off'" ng-model="vm.VacationMode" aria-label="Switch 1">
+                       Vacation Mode
+                      </md-switch></span>                
+    <!--                <md-button hide show-gt-sm class="toolbar-button" aria-label="Help" ng-click="vm.showHelp($event)">
+                        <md-icon class="material-icons">help</md-icon>
+                    </md-button>-->
+                    <md-button ng-click="vm.toggleItemsList('right')" aria-label="Activity log">
+                        <md-icon class="material-icons">list</md-icon>
+                    </md-button>
+                </div>
             </md-toolbar>
-
-            <md-content layout="column"  flex class="page-content">
-                <div layout-fill style=min-height: 100%;position:absolute;" ui-view></div>
+            <md-content layout="column" flex class="page-content">
+                <div layout-fill style="min-height: 100%;position:absolute;display: block;" ui-view></div>
             </md-content>
             </div>
+            <md-sidenav md-component-id="right"
+                        class="md-sidenav-right mdl-color--blue-grey-200 md-whiteframe-4dp">
+                <md-toolbar  class="md-hue-2 md-whiteframe-z8">
+                    <header flex layout="column" class="turbop-drawer-header mdl-color--blue-grey-900 mdl-color-text--blue-grey-50" layout-align = "center center">
+                         <span class="mdl-layout-title" style="letter-spacing: .03em;font-weight: 800;align-self: center;">Activity Log</span>
+                    </header>
+                </md-toolbar>
+                <md-list flex>
+                    <md-list-item class="md-2-line" ng-repeat="act in vm.ActivityLog" style="background-color: #0e2434 !important;">
+                        <md-icon class="material-icons" md-accent ng-class="{'md-avatar-icon':'info_outline'}">info_outline</md-icon>
+                        <div mdl-color--blue-grey-900 class="md-list-item-text" ng-class="{'md-offset': phone.options.offset }">
+                            <p> {{ act.dt_tm }} </p>
+                            <p> {{ act.message }} </p>
+                        </div>                                                
+                    </md-list-item>
+                </md-list>
+            </md-sidenav>            
         </div>        
     </body>
     <!-- Application Dependencies -->

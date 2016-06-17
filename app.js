@@ -85,8 +85,8 @@
           .state('cams', {
             url: '/cams',
             templateUrl: 'templates/camera.tmpl.html', 
-            controller : function($scope){
-                $scope.getCams();
+            controller : function($scope){          
+             $scope.getCams();
              $scope.vm.title = 'Cameras';                 
             },
             data: {
@@ -95,7 +95,7 @@
             }
           })      
            .state('family', {
-            url: '/search',          
+            url: '/family',          
             templateUrl: 'templates/myfamily.tmpl.html', 
             controller : function($scope,$interval,HomeComponents){
                 //$scope.getCams();

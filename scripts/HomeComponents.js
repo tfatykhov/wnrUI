@@ -11,7 +11,7 @@
                 HomeComponents.lights=[];
                 HomeComponents.homeData={};
                 HomeComponents.geommarkers=[];
-                
+                HomeComponents.details={};
                 function setState(state){
                    currState = state;
                 }
@@ -88,7 +88,27 @@
                 function getLightList(){
                     return HomeComponents.lights || [];
                 }
-
+                
+                function getHomeDetails(){
+                    var req = {
+                    		cache : false,
+                            method: 'GET',
+                            url: '/red/getApplDataJson',
+                            headers :{
+                                'Cache-Control': 'no-cache'
+                            }
+                        }
+                       return $http(req)
+                           .then(function(response){console.log('getFamily was executed from '+req.url);HomeComponents.details=response.data;
+                            }
+                                 ,function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
+                    
+                };
+                
+                function homeDetails(){
+                    return HomeComponents.details;
+                };
+                
                 function getFamily(){
                     var req = {
                     		cache : false,
@@ -168,6 +188,8 @@
                     clearGeoMarkers : clearGeoMarkers,
                     getGeoMarkers : getGeoMarkers,
                     addGeoMarker : addGeoMarker,
+                    getHomeDetails : getHomeDetails,
+                    homeDetails : homeDetails,
                     refreshCamImgUrl : refreshCamImgUrl
                 };                
                 return methods;

@@ -30,8 +30,10 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     vm.login = login;
     $scope.wsComms = WsComms;
     vm.HomeComponents = HomeComponents;
+    vm.HomeDetails={};
     vm.HomeWeather = {};
     vm.HomePosition = {};
+    vm.ActivityLog =[];
     $scope.init = function () {
     	vm.menuItems = [
     	                {
@@ -115,6 +117,10 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
                 vm.user=user;
                 $scope.init();                
                 WsComms.connect();
+                HomeComponents.getHomeDetails()
+                .then(function(){
+                    vm.HomeDetails=HomeComponents.homeDetails();
+                })
                 HomeComponents.getSummary()
                 .then(function(){
                     vm.HomeComponents=HomeComponents.getHomeComponents();
@@ -161,6 +167,16 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
             var v= $scope.wsComms.collection[0];
             vm[v.varName]=v.varVal;
         }
+        if ('alertType' in $scope.wsComms.collection[0]){
+            var datetime = new Date();
+            var title_tm=datetime.toLocaleTimeString();
+            vm.ActivityLog.splice(0,0,{
+                dt_tm:title_tm,
+                message:$scope.wsComms.collection[0].message
+            });
+            if (vm.ActivityLog.lenth>50) vm.ActivityLog.pop();
+            
+        }
    //     if ('weather') in $scope.wsComms.collection[0] $scope.get
 /*        console.log('incoming WebSocket Message');
         console.log($scope.wsComms.collection[0]);*/
@@ -175,14 +191,14 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
       $mdOpenMenu(ev);
     };
     
-    function toggleItemsList() { 
-        $mdSidenav('left').toggle();
+    function toggleItemsList(navID) { 
+        $mdSidenav(navID).toggle();
     };
     
     
     function selectItem (item) {
       //vm.title = item.name;
-      vm.toggleItemsList();
+      vm.toggleItemsList('left');
     };
 // menu functions end  
     
