@@ -24,10 +24,13 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     var originatorEv;
     vm.menuItems=[];
  	$scope.storage=$localStorage;
+    /*Callable functions       */
     vm.DialogController = DialogController;
     vm.toggleItemsList = toggleItemsList;
     vm.selectItem = selectItem;
     vm.login = login;
+    vm.showForecast = showForecast;
+    /***************************/    
     $scope.wsComms = WsComms;
     vm.HomeComponents = HomeComponents;
     vm.HomeDetails={};
@@ -202,6 +205,28 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     };
 // menu functions end  
     
+
+// modals    
+  function showForecast(ev) {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+      $mdDialog.show({
+        controller: ForecastController,
+        templateUrl: 'templates/forecast.tmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose:true,
+          locals: { 
+        	  "dailyForecast" :$scope.vm.HomeWeather.daily
+        },          
+        fullscreen: useFullScreen
+      })
+      $scope.$watch(function() {
+        return $mdMedia('xs') || $mdMedia('sm');
+      }, function(wantsFullScreen) {
+        $scope.customFullscreen = (wantsFullScreen === true);
+      });
+    };
+    
     
 //TODO - remove    
     $scope.vm.showGallery = function(ev,apprId) {
@@ -275,7 +300,18 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
 	    $mdDialog.cancel();
 	  };
 	}
-  
+    
+    function ForecastController($scope, $mdDialog,dailyForecast) {
+      $scope.dailyForecast=dailyForecast;
+      $scope.hide = function() {
+        $mdDialog.hide();
+      };
+      $scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+    }
+    
+    
   function GalleryController($scope, $mdDialog,storage,apprId) {
 	  $scope.images=CurrForm.getImgAsArray(storage,apprId);
 	  $scope.hide = function() {

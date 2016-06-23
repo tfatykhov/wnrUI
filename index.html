@@ -103,13 +103,14 @@
                     </header>
                 </md-toolbar>
                 <md-list flex>
-                    <md-list-item class="md-2-line" ng-repeat="act in vm.ActivityLog" style="background-color: #0e2434 !important;">
-                        <md-icon class="material-icons" md-accent ng-class="{'md-avatar-icon':'info_outline'}">info_outline</md-icon>
-                        <div mdl-color--blue-grey-900 class="md-list-item-text" ng-class="{'md-offset': phone.options.offset }">
+                    <md-list-item class="md-3-line" ng-repeat="act in vm.ActivityLog" style="background-color: #0e2434 !important;">
+                        <md-icon class="material-icons  md-warn" md-accent>info_outline</md-icon>
+                        <div mdl-color--blue-grey-900 class="md-list-item-text">
                             <p> {{ act.dt_tm }} </p>
                             <p> {{ act.message }} </p>
-                        </div>                                                
-                    </md-list-item>
+                        </div>     
+                    <md-divider ng-if="!$last"></md-divider>                         
+                    </md-list-item>                   
                 </md-list>
             </md-sidenav>            
         </div>        

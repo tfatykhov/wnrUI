@@ -1,0 +1,34 @@
+<md-dialog aria-label="Weather forecast"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Weather forecast</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+			<md-icon class="material-icons" aria-label="close">highlight_off</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+		<div  layout="row" layout-wrap>
+            <md-list class="md-dense" flex>
+                <md-list-item class="md-3-line" ng-repeat="d in dailyForecast" >
+                    <i ng-class="'wi forecast-icons '+d.web_icon+' md-avatar'" style="font-size:40px; color: rgb(228, 193, 89);"></i>
+                    <div class="md-list-item-text" style="padding-left: 15px;">
+                        <h3> {{ d.weekday+', '+d.month+' '+d.wmonthDay }} </h3>
+                        <p> {{d.summary}} </p>
+                        <p><small>Min: {{d.temperatureMin}}</small>
+                        <small>Max: {{d.temperatureMax}}</small></p>
+                    </div>     
+                <md-divider ng-if="!$last"></md-divider>                         
+                </md-list-item>                   
+            </md-list>    	     
+		</div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+       <md-button ng-click="cancel()" style="margin-right:20px;">
+        Close
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
