@@ -176,6 +176,7 @@
 
         $mdThemingProvider.theme('default')
           .primaryPalette('blue-grey')
+          .accentPalette('blue')
           .dark();
         $mdThemingProvider.theme('dark-grey').backgroundPalette('grey').dark();
         $mdThemingProvider.theme('dark-blue-grey').backgroundPalette('blue-grey').dark();         
