@@ -5,8 +5,34 @@
 
     angular.module('WnrUIApp')
         .controller('MainController', ['$scope', '$rootScope', '$http', '$timeout', '$mdSidenav', '$localStorage', '$mdDialog', '$mdMedia', '$state',  'HomeComponents',  'NgMap','WsComms', 'UserAuth','utils', MainController])
-        .directive('fallbackSrc',fallbackSrc);
+        .directive('fallbackSrc',fallbackSrc)
+        .directive('changeDimmer',['$http', changeDimmer]); 
 
+        function changeDimmer($http) {
+            return {
+                restrict: 'A',
+                link: function($scope, element, attrs) {
+                    element.on('$md.pressup', function() {
+                    var o = $scope.l;
+                    var req = {
+                        method: 'POST',
+                        url: "/red/ifttt",
+                        headers :{
+                        'Content-Type': 'application/json'
+                        },
+                        data: {
+                            "winkName": o.name,
+                            "type":"light",
+                            "cmd":(o.norm_brightness>0 ? "on" : "off"),
+                            "level":o.norm_brightness
+                        }
+                    }                   
+                    $http(req);//.then(function(){console.log('Light control executed '+req.url)},function(){console.log('url: '+req.url+' unreachable')});                        
+                    })
+                }
+            }
+        };
+    
         function fallbackSrc(){
             var fallbackSrc = {
                     link: function postLink(scope,iElement,iAttrs){
@@ -16,7 +42,7 @@
                     }
             }
             return fallbackSrc;
-        }    
+        };    
     
 function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localStorage, $mdDialog, $mdMedia,  $state, HomeComponents, NgMap,WsComms,UserAuth,utils) {
 
@@ -30,6 +56,9 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     vm.selectItem = selectItem;
     vm.login = login;
     vm.showForecast = showForecast;
+    vm.onOff = onOff;
+    vm.activateScene = activateScene;
+    vm.lockUnlock = lockUnlock;
     /***************************/    
     $scope.wsComms = WsComms;
     vm.HomeComponents = HomeComponents;
@@ -166,6 +195,13 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
             HomeComponents.setWeather($scope.wsComms.collection[0].weather);
             vm.HomeWeather=HomeComponents.getWeather();
         }
+        if('type' in $scope.wsComms.collection[0]){
+            var o=$scope.wsComms.collection[0];
+            HomeComponents.getHomeDetails()
+            .then(function(){
+                vm.HomeDetails=HomeComponents.homeDetails();
+            })
+        }
         if ('varName' in $scope.wsComms.collection[0]){
             var v= $scope.wsComms.collection[0];
             vm[v.varName]=v.varVal;
@@ -204,7 +240,30 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
       vm.toggleItemsList('left');
     };
 // menu functions end  
+
+// control functions
+function onOff(light) {
+    //console.log(light);
+    HomeComponents.setOnOff(light)
+    .then(function(){
+        vm.HomeDetails=HomeComponents.homeDetails();
+    })        
+};
+
+    function activateScene(scene){
+        console.log(scene);
+        HomeComponents.activateScene(scene);
+    };
     
+    function lockUnlock(lock){
+        console.log(lock);
+        HomeComponents.setLockUnlock(lock)
+        .then(function(){
+            vm.HomeDetails=HomeComponents.homeDetails();
+        })        
+    };
+    
+// control functions end
 
 // modals    
   function showForecast(ev) {

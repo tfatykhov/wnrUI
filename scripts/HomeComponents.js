@@ -89,6 +89,51 @@
                     return HomeComponents.lights || [];
                 }
                 
+                function setOnOff(o){
+                    var req = {
+                        method: 'POST',
+                        url: "/red/ifttt",
+                        headers :{
+                        'Content-Type': 'application/json'
+                        },
+                        data: {
+                            "winkName": o.name,
+                            "type":"light",
+                            "cmd":(o.powered ? "on" : "off")
+                        }
+                    }
+                    if('norm_brightness' in o) req.data.level=o.norm_brightness;                    
+                    return $http(req).then(function(){return 'ok'},function(){console.log('url: '+req.url+' unreachable');return 'error'});
+                }
+                function setLockUnlock(l){
+                      var req = {
+                        method: 'POST',
+                        url: "/red/ifttt",
+                        headers :{
+                        'Content-Type': 'application/json'
+                        },
+                        data: {
+                            "winkName": l.name,
+                            "type":"lock",
+                            "cmd":(l.locked ? "lock" : "unlock")
+                        }
+                    }                  
+                    return $http(req).then(function(){return 'ok'},function(){console.log('url: '+req.url+' unreachable');return 'error'});                  
+                }
+                function activateScene(s){
+                      var req = {
+                        method: 'POST',
+                        url: "/red/ifttt",
+                        headers :{
+                        'Content-Type': 'application/json'
+                        },
+                        data: {
+                            "winkName": s.name,
+                            "type":"shortcut"
+                        }
+                    }                  
+                    return $http(req).then(function(){return 'ok'},function(){console.log('url: '+req.url+' unreachable');return 'error'});                      
+                }
                 function getHomeDetails(){
                     var req = {
                     		cache : false,
@@ -170,6 +215,9 @@
                    },30000); 
                 };
                 var methods= {
+                    setOnOff : setOnOff,
+                    setLockUnlock : setLockUnlock,
+                    activateScene : activateScene,
                     setHomeComponents : setHC,
                     setWeather : setWeather,
                     getSummary : getSummary,

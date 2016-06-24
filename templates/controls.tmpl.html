@@ -1,26 +1,28 @@
   <md-tabs md-dynamic-height md-border-bottom md-swipe-content>
       <md-tab label="Light Bulbs">
-        <md-content ng-cloack flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+        <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
             <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.light_bulbs" md-theme="dark-blue-grey" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
-                    <div style="width:180px;height:90px;display:block;">                       
-                        <md-switch ng-model="l.powered" aria-label="on_off">
-                        <span class="md-subhead">{{l.name}}</span>                             
-                        </md-switch> 
-                    <md-slider flex min="0" max="1" ng-model="l.brightness" aria-label="brightness" id="brightness">
-                    </md-slider>                        
+                    <div style="width:180px;height:90px;display:block;" >                       
+                        <md-switch ng-model="l.powered" aria-label="on_off" ng-change="vm.onOff(l)">
+                            <span class="md-subhead-ctrl">{{l.name}}</span>                             
+                        </md-switch>
+                            <md-slider-container>
+                                <md-slider change-dimmer  flex class="md-accent"   min="0" max="100" ng-model="l.norm_brightness" aria-label="{{l.name}}" id="{{l.name}}">
+                                </md-slider>
+                            </md-slider-container>
                     </div>
                 </md-card-content>     
             </md-card>
         </md-content>
       </md-tab>
       <md-tab label="Binary Switches">
-        <md-content ng-cloack flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+       <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
             <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.binary_switches" md-theme="dark-blue-grey" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
-                    <div style="width:180px;height:60px;display:block;">                       
-                        <md-switch ng-model="l.powered" aria-label="on_off">
-                        <span class="md-subhead">{{l.name}}</span>                             
+                    <div style="width:160px;height:60px;display:block;">                       
+                        <md-switch ng-model="l.powered" aria-label="on_off" ng-change="vm.onOff(l)">
+                        <span class="md-subhead-ctrl">{{l.name}}</span>                             
                         </md-switch> 
                     </div>
                 </md-card-content>     
@@ -28,37 +30,40 @@
         </md-content>
       </md-tab>
         <md-tab label="Locks">
-        <md-content ng-cloack flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+       <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
             <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.locks" md-theme="dark-blue-grey" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
-                    <div style="width:180px;height:60px;display:block;">                       
-                        <md-switch ng-model="l.locked" aria-label="on_off">
-                        <span class="md-subhead">{{l.name}}</span>                             
+                    <div style="width:160px;height:60px;display:block;">                       
+                        <md-switch ng-model="l.locked" aria-label="lock_unlock" ng-change="vm.lockUnlock(l)">
+                        <span class="md-subhead-ctrl">{{l.name}}</span>                             
                         </md-switch> 
                     </div>
                 </md-card-content>     
             </md-card>
         </md-content>
       </md-tab> 
-        <md-tab label="Groups">
-        <md-content ng-cloack flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+<!--        <md-tab label="Groups">
+       <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
             <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.locks" md-theme="dark-blue-grey" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
-                    <div style="width:180px;height:60px;display:block;">                       
+                    <div style="width:160px;height:60px;display:block;">                       
                         <md-switch ng-model="l.locked" aria-label="on_off">
-                        <span class="md-subhead">{{l.name}}</span>                             
+                        <span class="md-subhead-ctrl">{{l.name}}</span>                             
                         </md-switch> 
                     </div>
                 </md-card-content>     
             </md-card>
         </md-content>
-      </md-tab> 
+      </md-tab> -->
         <md-tab label="Scenes">
-        <md-content ng-cloack flex class="md-padding" layout-fill layout-xs="column" layout="row" layout-wrap layout-align="start center">
+       <md-content ng-cloack flex layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
             <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.scenes" md-theme="dark-blue-grey" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
-                    <div style="width:180px;height:60px;display:block;">                       
-                        <span class="md-subhead">{{l.name}}</span>                             
+                    <div style="display:block;">                       
+                        <span class="md-subhead-ctrl">{{l.name}}</span>
+                        <md-button class="md-icon-button md-accent" aria-label="Run" ng-click="vm.activateScene(l)">
+                            <md-icon class="material-icons">play_circle_outline</md-icon>
+                        </md-button>
                     </div>
                 </md-card-content>     
             </md-card>

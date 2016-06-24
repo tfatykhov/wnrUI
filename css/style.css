@@ -123,6 +123,13 @@
   background: indigo; 
   }
 
+
+.md-subhead-ctrl {
+    /* font-size: 16px; */
+    font-weight: 400;
+    letter-spacing: 0.010em;
+    line-height: 24px;
+}
 .search-map { 
 	position: absolute; 
 	top: 10px; 
