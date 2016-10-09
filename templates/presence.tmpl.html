@@ -1,0 +1,37 @@
+<md-dialog aria-label="Family Details"  ng-cloak>
+  <form>
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>My Family</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+			<md-icon class="material-icons" aria-label="close">highlight_off</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+		<div  layout="row" layout-wrap>
+            <md-card layout="column"  ng-repeat="f in family" md-theme="dark-blue-grey" md-theme-watch style="width: 270px">
+                <md-card-title>
+                  <md-card-title-text>
+                    <span class="md-headline" style="color: aliceblue;">{{f.name}}</span>
+        <!--            <span class="md-headline" style="font-size: 1.3em;font-weight: 400;" ng-style="{'color': ('{{c.icon_color}}'=='detail-warning' ? 'orange' : '{{c.icon_color}}'=='detail-danger' ? '#E53935' : '#72d572' )}">{{c.value}}</span>-->
+                      <span class="md-subhead" style="color: aliceblue;">{{f.distanceFromHome/1000}} Km from home. Battery {{f.battery}}%</span>
+                    <span ng-show="{{f.lastEvent=='enter'}}" class="md-subhead" style="color: aliceblue;">@{{f.lastWaypoint.replace('-','')}}</span>              
+                  </md-card-title-text>
+                </md-card-title>                    
+              <md-card-title-media>
+                  <div class="md-media-lg card-media">
+                    <img border="0"  ng-src="//maps.googleapis.com/maps/api/staticmap?center={{f.lat}},{{f.lng}}&zoom=15&size=260x200&scale=1&markers=color:blue|label:*|{{f.lat}},{{f.lng}}&key=AIzaSyDW37r8_c9wC_s0iptzekWUvahAU07nl-U" alt="..">
+                  </div>
+              </md-card-title-media>
+                <md-card-actions layout="row" layout-align="end center">
+                    <md-button class="md-primary">
+                        navigate
+                    </md-button>
+                </md-card-actions>       
+            </md-card>
+        </div>
+      </md-dialog-content>
+    </form>
+</md-dialog>

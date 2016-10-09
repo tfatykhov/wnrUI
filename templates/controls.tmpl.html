@@ -1,7 +1,7 @@
-  <md-tabs md-dynamic-height md-border-bottom md-swipe-content>
+  <md-tabs  md-dynamic-height md-border-bottom md-swipe-content>
       <md-tab label="Light Bulbs">
-        <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
-            <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.light_bulbs" md-theme="dark-blue-grey" md-theme-watch>
+        <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="center center">
+            <md-card md-theme="{{ l.powered ? 'dark-deep-orange' : 'dark-blue-grey' }}" layout="column" ng-repeat="l in vm.HomeDetails.WinkData.light_bulbs"  md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
                     <div style="width:180px;height:90px;display:block;" >                       
                         <md-switch ng-model="l.powered" aria-label="on_off" ng-change="vm.onOff(l)">
@@ -17,8 +17,8 @@
         </md-content>
       </md-tab>
       <md-tab label="Binary Switches">
-       <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
-            <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.binary_switches" md-theme="dark-blue-grey" md-theme-watch>
+       <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="center center">
+            <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.binary_switches" md-theme="{{ l.powered ? 'dark-deep-orange' : 'dark-blue-grey' }}" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
                     <div style="width:160px;height:60px;display:block;">                       
                         <md-switch ng-model="l.powered" aria-label="on_off" ng-change="vm.onOff(l)">
@@ -30,8 +30,8 @@
         </md-content>
       </md-tab>
         <md-tab label="Locks">
-       <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
-            <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.locks" md-theme="dark-blue-grey" md-theme-watch>
+       <md-content ng-cloack flex  layout-fill layout-xs="row" layout="row" layout-wrap layout-align="center center">
+            <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.locks" md-theme="{{ !l.locked ? 'dark-deep-orange' : 'dark-blue-grey' }}" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
                     <div style="width:160px;height:60px;display:block;">                       
                         <md-switch ng-model="l.locked" aria-label="lock_unlock" ng-change="vm.lockUnlock(l)">
@@ -56,7 +56,7 @@
         </md-content>
       </md-tab> -->
         <md-tab label="Scenes">
-       <md-content ng-cloack flex layout-fill layout-xs="row" layout="row" layout-wrap layout-align="start center">
+       <md-content ng-cloack flex layout-fill layout-xs="row" layout="row" layout-wrap layout-align="center center">
             <md-card layout="column" ng-repeat="l in vm.HomeDetails.WinkData.scenes" md-theme="dark-blue-grey" md-theme-watch>
                 <md-card-content layout="row" layout-align="center center">
                     <div style="display:block;">                       

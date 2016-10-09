@@ -4,7 +4,7 @@
     'use strict';
 
     angular.module('WnrUIApp')
-        .controller('MainController', ['$scope', '$rootScope', '$http', '$timeout', '$mdSidenav', '$localStorage', '$mdDialog', '$mdMedia', '$state',  'HomeComponents',  'NgMap','WsComms', 'UserAuth','utils', MainController])
+        .controller('MainController', ['$scope', '$rootScope', '$http', '$timeout', '$mdSidenav', '$localStorage', '$mdDialog', '$mdMedia', '$state','md5',  'HomeComponents',  'NgMap','WsComms', 'UserAuth','utils', MainController])
         .directive('fallbackSrc',fallbackSrc)
         .directive('changeDimmer',['$http', changeDimmer]); 
 
@@ -44,7 +44,7 @@
             return fallbackSrc;
         };    
     
-function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localStorage, $mdDialog, $mdMedia,  $state, HomeComponents, NgMap,WsComms,UserAuth,utils) {
+function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localStorage, $mdDialog, $mdMedia,  $state,md5, HomeComponents, NgMap,WsComms,UserAuth,utils) {
 
     var vm = this;
     var originatorEv;
@@ -56,9 +56,12 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     vm.selectItem = selectItem;
     vm.login = login;
     vm.showForecast = showForecast;
+    vm.showFamily = showFamily;
     vm.onOff = onOff;
     vm.activateScene = activateScene;
     vm.lockUnlock = lockUnlock;
+    vm.ShowModal = ShowModal;
+    vm.showCategory = showCategory;
     /***************************/    
     $scope.wsComms = WsComms;
     vm.HomeComponents = HomeComponents;
@@ -66,7 +69,12 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     vm.HomeWeather = {};
     vm.HomePosition = {};
     vm.ActivityLog =[];
-    $scope.init = function () {
+    var opt = {detectScreenOrientation : false};
+    var fp=new Fingerprint2(opt);
+    fp.get(function(result){
+    vm.myFngrp=result;
+    });    
+    $scope.init = function () {        
     	vm.menuItems = [
     	                {
     	                  name: 'Home Status',
@@ -141,7 +149,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     }
     
     function login(user,pass){
-        UserAuth.login(user,pass)
+        UserAuth.login(user,md5.createHash(user+':'+pass),vm.myFngrp)
             .then(function(response){
             console.log(response);
             if (response.status==200) {
@@ -266,6 +274,17 @@ function onOff(light) {
 // control functions end
 
 // modals    
+    function ShowModal(category){
+    if (category=='propane') category='remaining';
+    switch(category){
+        case 'presence':
+            vm.showFamily();
+            break;
+        default:
+            vm.showCategory(category);
+            break;
+      }
+  }
   function showForecast(ev) {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
       $mdDialog.show({
@@ -285,7 +304,51 @@ function onOff(light) {
         $scope.customFullscreen = (wantsFullScreen === true);
       });
     };
+
+  function showCategory(category) {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+      $scope.$watch(function() {
+        return $mdMedia('xs') || $mdMedia('sm');
+      }, function(wantsFullScreen) {
+        $scope.customFullscreen = (wantsFullScreen === true);
+      });      
+      HomeComponents.getCategory(category)
+      .then(function(){
+          $mdDialog.show({
+            controller: CategoryController,
+            templateUrl: 'templates/category.tmpl.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose:true,
+              locals: { 
+                  "category" :HomeComponents.getCategoryList(category)
+            },          
+            fullscreen: useFullScreen
+          })
+      });
+  };  
     
+  function showFamily(ev) {
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+      $scope.$watch(function() {
+        return $mdMedia('xs') || $mdMedia('sm');
+      }, function(wantsFullScreen) {
+        $scope.customFullscreen = (wantsFullScreen === true);
+      });      
+      HomeComponents.getFamily()
+      .then(function(){
+          $mdDialog.show({
+            controller: PresenceController,
+            templateUrl: 'templates/presence.tmpl.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose:true,
+              locals: { 
+                  "family" :HomeComponents.getFamilyList()
+            },          
+            fullscreen: useFullScreen
+          })
+      });
+    };    
     
 //TODO - remove    
     $scope.vm.showGallery = function(ev,apprId) {
@@ -370,6 +433,25 @@ function onOff(light) {
       };
     }
     
+    function CategoryController($scope, $mdDialog,category) {
+      $scope.category=category;
+      $scope.hide = function() {
+        $mdDialog.hide();
+      };
+      $scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+    }    
+   
+    function PresenceController($scope, $mdDialog,family) {
+      $scope.family=family;
+      $scope.hide = function() {
+        $mdDialog.hide();
+      };
+      $scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+    }    
     
   function GalleryController($scope, $mdDialog,storage,apprId) {
 	  $scope.images=CurrForm.getImgAsArray(storage,apprId);
