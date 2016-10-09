@@ -12,6 +12,7 @@
                 HomeComponents.homeData={};
                 HomeComponents.geommarkers=[];
                 HomeComponents.details={};
+                HomeComponents.categories={};
                 function setState(state){
                    currState = state;
                 }
@@ -66,6 +67,22 @@
                                                    },
                                  function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
                 };
+                function getCategory(category){
+                    var req = {
+                    		cache : true,
+                            method: 'GET',
+                            url: '/red/sensors/'+category
+                        }
+                       return $http(req)
+                           .then(function(response){ console.log('getLCategory was executed from '+req.url);
+                                                    HomeComponents.categories[category]=response.data;
+                                                   },
+                                 function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
+                };                
+                
+                function getCategoryList(category){
+                    return HomeComponents.categories[category] || [];
+                }
                 
                 function getCameras(){
                     var req = {
@@ -144,7 +161,7 @@
                             }
                         }
                        return $http(req)
-                           .then(function(response){console.log('getFamily was executed from '+req.url);HomeComponents.details=response.data;
+                           .then(function(response){console.log('getHomeDetails was executed from '+req.url);HomeComponents.details=response.data;
                             }
                                  ,function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
                     
@@ -228,6 +245,8 @@
                     getHomeComponents: getHomeComponents,
                     getHomePosition : getHomePosition,
                     getWeather : getWeather,
+                    getCategory : getCategory,
+                    getCategoryList : getCategoryList,
                     setState : setState,
                     getState : getState,
                     getFamily : getFamily,

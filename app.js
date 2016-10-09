@@ -3,7 +3,7 @@
 
     'use strict';
 
-    var WnrUIApp = angular.module('WnrUIApp', ['ngWebSocket','ui.router', 'ngMaterial','ngMap', 'ngStorage', 'ngMessages', 'formlyMaterial', 'formly',  'ds.clock'])
+    var WnrUIApp = angular.module('WnrUIApp', ['ngWebSocket','ui.router', 'ngMaterial','ngMap', 'ngStorage', 'ngMessages', 'formlyMaterial', 'formly',  'ds.clock', 'angular-md5'])
         .factory('WsComms',function($rootScope,$websocket,$timeout){
             var wsUri = "ws:";
             var loc = window.location;
@@ -182,7 +182,9 @@
         $mdThemingProvider.theme('dark-blue-grey').backgroundPalette('blue-grey').dark();         
         $mdThemingProvider.theme('dark-orange').backgroundPalette('orange').dark();
         $mdThemingProvider.theme('dark-purple').backgroundPalette('deep-purple').dark();
-        $mdThemingProvider.theme('dark-blue').backgroundPalette('blue').dark();         
+        $mdThemingProvider.theme('dark-blue').backgroundPalette('blue').dark();
+        $mdThemingProvider.theme('dark-amber').backgroundPalette('amber').dark();
+        $mdThemingProvider.theme('dark-deep-orange').backgroundPalette('deep-orange').dark();         
          //formlyConfigProvider.extras.errorExistsAndShouldBeVisibleExpression = "true";
          $httpProvider.defaults.cache = true;
 
