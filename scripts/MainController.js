@@ -71,7 +71,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     vm.ActivityLog =[];
     var fp=new Fingerprint2();
     fp.get(function(result){
-    vm.myFngrp=result;
+    vm.myFngrp=btoa(result);
     });    
     $scope.init = function () {        
     	vm.menuItems = [
