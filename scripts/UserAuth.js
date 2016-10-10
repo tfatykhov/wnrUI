@@ -14,7 +14,7 @@
                 method: 'POST',
                 url: '/auth',
                 data : {
-                    uid: uid,
+                    uidhash:uid,
                     pwd: btoa(pwd),
                     uuid:btoa(browserUid)
                 }
