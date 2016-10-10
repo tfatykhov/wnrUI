@@ -69,8 +69,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     vm.HomeWeather = {};
     vm.HomePosition = {};
     vm.ActivityLog =[];
-    var opt = {detectScreenOrientation : false};
-    var fp=new Fingerprint2(opt);
+    var fp=new Fingerprint2();
     fp.get(function(result){
     vm.myFngrp=result;
     });    
@@ -125,7 +124,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
 //    $scope.init();
     
     $scope.getSummary = function (){
-        HomeComponents.getSummary()
+        HomeComponents.getSummary(vm.myFngrp)
         .then(function(){
             vm.HomeComponents=HomeComponents.getHomeComponents();
             vm.HomePosition=HomeComponents.getHomePosition();
@@ -133,7 +132,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
         });
     }    
     $scope.getLights = function(){
-        HomeComponents.getLights()
+        HomeComponents.getLights(vm.myFngrp)
         .then(function(){
             vm.lights=HomeComponents.getLightList();
             console.log('got lights');
@@ -142,7 +141,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     }
     
     $scope.getCams = function(){
-        HomeComponents.getCameras()
+        HomeComponents.getCameras(vm.myFngrp)
         .then(function(){
            vm.cameras=HomeComponents.getCamList();
         })
@@ -157,11 +156,11 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
                 vm.user=user;
                 $scope.init();                
                 WsComms.connect();
-                HomeComponents.getHomeDetails()
+                HomeComponents.getHomeDetails(vm.myFngrp)
                 .then(function(){
                     vm.HomeDetails=HomeComponents.homeDetails();
                 })
-                HomeComponents.getSummary()
+                HomeComponents.getSummary(vm.myFngrp)
                 .then(function(){
                     vm.HomeComponents=HomeComponents.getHomeComponents();
                     vm.HomePosition=HomeComponents.getHomePosition();
@@ -205,7 +204,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
         }
         if('type' in $scope.wsComms.collection[0]){
             var o=$scope.wsComms.collection[0];
-            HomeComponents.getHomeDetails()
+            HomeComponents.getHomeDetails(vm.myFngrp)
             .then(function(){
                 vm.HomeDetails=HomeComponents.homeDetails();
             })

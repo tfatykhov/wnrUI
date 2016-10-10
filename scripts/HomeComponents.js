@@ -42,11 +42,11 @@
                 
                 function getState(){ return currState}
                 
-                function getSummary(){
+                function getSummary(bfp){
                     var req = {
                     		cache : false,
                             method: 'GET',
-                            url: '/freeboard/MySummaryJson'
+                            url: '/freeboard/MySummaryJson?bfp='+bfp
                         }
                        return $http(req)
                            .then(function(response){ console.log('getLightts was executed from '+req.url);
@@ -55,11 +55,11 @@
                                  function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
                 };
                 
-                function getLights(){
+                function getLights(bfp){
                     var req = {
                     		cache : true,
                             method: 'GET',
-                            url: '/freeboard/LightControl'
+                            url: '/freeboard/LightControl?bfp='+bfp
                         }
                        return $http(req)
                            .then(function(response){ console.log('getLightts was executed from '+req.url);
@@ -84,11 +84,11 @@
                     return HomeComponents.categories[category] || [];
                 }
                 
-                function getCameras(){
+                function getCameras(bfp){
                     var req = {
                     		cache : false,
                             method: 'GET',
-                            url: '/freeboard/MyCameras/json',
+                            url: '/freeboard/MyCameras/json?bfp='+bfp,
                             headers :{
                                 'Cache-Control': 'no-cache'
                             }
@@ -151,11 +151,11 @@
                     }                  
                     return $http(req).then(function(){return 'ok'},function(){console.log('url: '+req.url+' unreachable');return 'error'});                      
                 }
-                function getHomeDetails(){
+                function getHomeDetails(bfp){
                     var req = {
                     		cache : false,
                             method: 'GET',
-                            url: '/red/getApplDataJson',
+                            url: '/red/getApplDataJson?bfp='+bfp,
                             headers :{
                                 'Cache-Control': 'no-cache'
                             }
@@ -171,11 +171,11 @@
                     return HomeComponents.details;
                 };
                 
-                function getFamily(){
+                function getFamily(bfp){
                     var req = {
                     		cache : false,
                             method: 'GET',
-                            url: '/freeboard/MyFamilyjson',
+                            url: '/freeboard/MyFamilyjson?bfp='+bfp,
                             headers :{
                                 'Cache-Control': 'no-cache'
                             }
