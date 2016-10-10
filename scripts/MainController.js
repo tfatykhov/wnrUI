@@ -333,7 +333,7 @@ function onOff(light) {
       }, function(wantsFullScreen) {
         $scope.customFullscreen = (wantsFullScreen === true);
       });      
-      HomeComponents.getFamily()
+      HomeComponents.getFamily(vm.myFngrp)
       .then(function(){
           $mdDialog.show({
             controller: PresenceController,
