@@ -149,7 +149,7 @@ function MainController($scope, $rootScope, $http, $timeout, $mdSidenav, $localS
     }
     
     function login(user,pass){
-        UserAuth.login(user,md5.createHash(user+':'+pass),vm.myFngrp)
+        UserAuth.login(md5.createHash(user),md5.createHash(user+':'+pass),vm.myFngrp)
             .then(function(response){
             console.log(response);
             if (response.status==200) {
