@@ -124,7 +124,7 @@
                 HomeComponents.addGeoMarker($scope.HomeMarker);
                 $scope.bounds.extend($scope.HomePosition);
                 
-                    HomeComponents.getFamily()
+                    HomeComponents.getFamily($scope.vm.myFngrp)
                     .then(function(){
                         $scope.geo_locations=HomeComponents.getFamilyList();
                         $scope.home_radius=HomeComponents.getHomeRadius();

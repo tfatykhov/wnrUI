@@ -16,7 +16,7 @@
                 data : {
                     uidhash:btoa(uid),
                     pwd: btoa(pwd),
-                    uuid:btoa(browserUid)
+                    uuid:browserUid
                 }
             }
             return $http(req)
