@@ -67,21 +67,25 @@
                                                    },
                                  function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
                 };
-                function getCategory(category){
+                function getCategory(label,category,group_name,group_option){
                     var req = {
                     		cache : true,
                             method: 'GET',
-                            url: '/red/sensors/'+category
+                            url: '/red/group_members/'+group_name+'/'+group_option
                         }
                        return $http(req)
                            .then(function(response){ console.log('getLCategory was executed from '+req.url);
-                                                    HomeComponents.categories[category]=response.data;
+                                                    HomeComponents.categories[category]= {
+                                                        'title':label,
+                                                        'value':group_option,
+                                                        'data':response.data
+                                                    };
                                                    },
                                  function(response){console.log('url: '+req.url+' error '+JSON.stringify(response));return 'eror'});                    
                 };                
                 
                 function getCategoryList(category){
-                    return HomeComponents.categories[category] || [];
+                    return HomeComponents.categories[category] || {};
                 }
                 
                 function getCameras(bfp){
