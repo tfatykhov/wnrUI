@@ -2,7 +2,7 @@
   <form>
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <h2>{{category.categoryName}} Details</h2>
+        <h2>{{category.label}} Details</h2>
         <span flex></span>
         <md-button class="md-icon-button" ng-click="cancel()">
 			<md-icon class="material-icons" aria-label="close">highlight_off</md-icon>
@@ -12,12 +12,12 @@
     <md-dialog-content>
 		<div  layout="row" layout-wrap>
             <md-list class="md-dense" flex>
-                <md-list-item class="md-3-line" ng-repeat="c in category.sensorList" >
+                <md-list-item class="md-3-line" ng-repeat="c in category.data" >
 <!--                    <i ng-class="'wi forecast-icons '+d.web_icon+' md-avatar'" style="font-size:40px; color: rgb(228, 193, 89);"></i>-->
                     <i class="material-icons forecast-icons" style="font-size:40px; color: rgb(228, 193, 89);">info_outline</i>                    
                     <div class="md-list-item-text" style="padding-left: 15px;">
                         <h3> {{c.name}} </h3>
-                        <p> {{c.value}} </p>
+                        <p> {{c[category.value]}} </p>
                     </div>     
                 <md-divider ng-if="!$last"></md-divider>                         
                 </md-list-item>                   

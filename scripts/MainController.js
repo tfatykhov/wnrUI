@@ -273,19 +273,19 @@ function onOff(light) {
 // control functions end
 
 // modals    
-    function ShowModal(category){
+    function ShowModal(label,category,group_name,group_option){
     if (category=='propane') category='remaining';
     switch(category){
         case 'presence':
             vm.showFamily();
             break;
         default:
-            vm.showCategory(category);
+            vm.showCategory(label,category,group_name,group_option);
             break;
       }
   }
   function showForecast(ev) {
-      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'))  && $scope.customFullscreen;
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));//  && $scope.customFullscreen;
       $mdDialog.show({
         controller: ForecastController,
         templateUrl: 'templates/forecast.tmpl.html',
@@ -304,14 +304,14 @@ function onOff(light) {
       });
     };
 
-  function showCategory(category) {
+  function showCategory(label,category,group_name,group_option) {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
       $scope.$watch(function() {
         return $mdMedia('xs') || $mdMedia('sm');
       }, function(wantsFullScreen) {
         $scope.customFullscreen = (wantsFullScreen === true);
       });      
-      HomeComponents.getCategory(category)
+      HomeComponents.getCategory(label,category,group_name,group_option)
       .then(function(){
           $mdDialog.show({
             controller: CategoryController,
