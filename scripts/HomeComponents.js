@@ -204,7 +204,9 @@
                             var b = HomeComponents.homeData.weather.Bloomsky;
                             HomeComponents.homeData.weather.currently.dual_temp= round(b.TemperatureC,1)+'C / '+b.TemperatureF+'F';
                             HomeComponents.homeData.weather.currently.humidity_pct=b.Humidity+'%';
-                            HomeComponents.homeData.weather.currently.uvindex=getUvIndex(b.UVIndex);
+                            if ('UVIndex' in b){
+                                HomeComponents.homeData.weather.currently.uvindex=getUvIndex(b.UVIndex);
+                            }
                         }
                     }
                     return ('weather' in HomeComponents.homeData ? HomeComponents.homeData.weather : {});
