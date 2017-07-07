@@ -17,7 +17,7 @@
 		"angular-aria" : "~1.5.x",
 		"angular-animate" :  "~1.5.x",
 		"angular-resource" : ">0.0.x",
-		"angular-ui-router" : ">0.0.x",		
+		"angular-ui-router" : ">1.0.x",		
 		"angular-messages" : ">0.0.x",
 		"angular-formly" : ">0.0.x",
 		"angular-formly-material" : ">0.0.x",
